@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Topfun Community</title>
+<link rel="stylesheet" href="css/normalize.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="http://getbootstrap.com/2.3.2/assets/css/bootstrap.css">
+<link rel="stylesheet" href="http://getbootstrap.com/2.3.2/assets/css/bootstrap-responsive.css">
+
+<!--lib-->
+<script src="js/libs/moment-with-langs.js"></script>
+<script src="js/libs/showdown.js"></script>
+<script src="js/libs/facial-expression.js"></script>
+<script src="js/libs/jquery-1.10.2.js"></script>
+<script src="js/libs/handlebars-1.1.2.js"></script>
+<script src="js/libs/ember-1.4.0.js"></script>
+<script src="js/libs/ember-data.js"></script>
+<script src="js/app.js"></script>
+<script src="js/router.js"></script>
+
+<!--controllers-->
+<script src="js/controllers/application.js"></script>
+<script src="js/controllers/topic.js"></script>
+<script src="js/controllers/topics.js"></script>
+
+
+<!--views-->
+
+<!--models-->
+
+</head>
+<body>
+
+
+<script type="text/x-handlebars" >
+{{outlet}}
+</script>
+
+<script type="text/x-handlebars" id='welcome'>
+<div id="fresh_nav" align="center">
+    <div class="row-fluid">
+      <div class="span4"></div>
+      <div class="span4">
+        <label class="fresh_nav_title">微趣</label>
+      </div>
+      <div class="span4">
+        <button class="btn fresh_nav_button btn-inverse"><i class="icon-user icon-white"></i>&nbsp;账户设置</button>
+      </div>
+    </div>
+  </div>
+      <div class="container marketing" align="center" style="margin-top:55px">
+      <div class="row">
+        {{#each node in model}}
+          <div class="span3 offset2">
+            <a {{bind-attr href="node.topicsLink"}}>
+            <img {{bind-attr src="node.iconLink"}} style="width:80px;height:80px" class="img-circle">
+            </a>
+            <h4>{{node.name}}</h4>
+            <p class="muted">帖子：{{node.topics_count}}</p>
+            <p class="muted">{{node.summary}}</p>
+            {{#link-to 'topics' node.id}}进入社区{{/link-to}}
+          </div>
+        {{/each}}
+      </div>
+      </div>
+
+</script>
+
+
+<script type="text/x-handlebars" id='topics'>
+<div id="fresh_nav" align="center">
+    <div class="row-fluid">
+      <div class="span4">
+        <ul class="pager" style="margin-top:8px;margin-left:10px">
+          <li class="previous">
+           <a href="/sq">&larr;返回</a>
+          </li>
+        </ul>
+      </div>
+      <div class="span4">
+        <label class="fresh_nav_title">
+         {{#if node}}
+         {{node.name}}
+         {{else}}
+          微趣
+         {{/if}}
+        </label>
+      </div>
+      <div class="span4">
+        <button class="btn fresh_nav_button btn-inverse"><i class="icon-edit icon-white"></i>&nbsp;发帖</button>
+      </div>
+    </div>
+  </div>
+
+
+  <ul class="nav nav-pills" style="margin-top:55px;align:center">
+    {{#if isFilterAll}}
+      <li class="disabled"><a>全部</a></li>
+    {{else}}
+      <li><a {{action 'filter' 'all'}}>全部</a></li>
+    {{/if}}
+
+    {{#if isFilterHot}}
+      <li class="disabled"><a>最热</a></li>
+    {{else}}
+      <li><a {{action 'filter' 'hot'}}>最热</a></li>
+    {{/if}}
+
+    {{#if isFilterNew}}
+      <li class="disabled"><a>最新</a></li>
+    {{else}}
+      <li><a {{action 'filter' 'new'}}>最新</a></li>
+    {{/if}}
+
+    {{#if isFilterMine}}
+      <li class="disabled"><a>我的</a></li>
+    {{else}}
+      <li><a {{action 'filter' 'mine'}}>我的</a></li>
+    {{/if}}
+  </ul>
+
+    <table class="table table-bordered table-hover">
+      {{#each topic in model}}
+        <tr>
+          <td>
+            {{#if topic.top}}
+            <img src="images/fresh_topic_top_icon.png" style="float:right">
+            {{/if}}
+
+            <label class="muted">{{ topic.nickname}}</label>
+            {{ topic.body}}
+            <label class="muted text-right">{{format-date topic.created_at}}</label>
+            <button {{action 'dislikeTopic' topic.id}} class="btn"><i class="icon-thumbs-down"></i> {{topic.disliked_count}}</button>
+            <button class="btn"><i class="icon-comment"></i> {{topic.replies_count}}</button> 
+            <button {{action 'likeTopic' topic.id}} class="btn"><i class="icon-thumbs-up"></i> {{topic.liked_count}}</button>
+
+            <!--<a {{bind-attr href="topic.replylink"}}>-->
+            <!--<button class="btn"><i class="icon-info-sign"></i> 帖子详情 </button>-->
+            <!--</a>-->
+          </td>
+        </tr>
+      {{/each}}
+    </table>
+
+    <div align="center">
+      <button {{action 'page'}} class="btn btn-primary">&nbsp;点击加载更多&nbsp;</button>
+    </div>
+
+</script>
+
+<script type="text/x-handlebars" id='reply'>
+<h2>this is reply</h2>
+</script>
+
+</body>
+</html>

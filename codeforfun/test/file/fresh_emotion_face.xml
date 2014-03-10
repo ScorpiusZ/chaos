@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<emotions>
+
+
+	<emotion ch_name="[h不要]" en_name="h_buyao" />
+	<emotion ch_name="[h好]" en_name="h_good" />
+	<emotion ch_name="[h哈哈]" en_name="h_haha" />
+	<emotion ch_name="[h来]" en_name="h_lai" />
+	<emotion ch_name="[hok]" en_name="h_ok" />
+	<emotion ch_name="[h拳头]" en_name="h_quantou" />
+	<emotion ch_name="[h弱]" en_name="h_ruo" />
+	<emotion ch_name="[h握手]" en_name="h_woshou" />
+	<emotion ch_name="[h耶]" en_name="h_ye" />
+	<emotion ch_name="[h赞]" en_name="h_zan" />
+	<emotion ch_name="[h最差]" en_name="h_zuicha" />
+	<emotion ch_name="[d爪]" en_name="d_zhua" />
+	<emotion ch_name="[dx]" en_name="d_x" />
+	<emotion ch_name="[do]" en_name="d_o" />
+	<emotion ch_name="[d火焰]" en_name="d_huoyan" />
+	<emotion ch_name="[dshi]" en_name="d_shi" />
+	<emotion ch_name="[d爱]" en_name="d_i" />
+	<emotion ch_name="[d骷髅]" en_name="d_kulou" />
+	<emotion ch_name="[囧]" en_name="f_jiong" />
+
+
+	<emotion ch_name="[衰]" en_name="d_shuai" />
+	<emotion ch_name="[d衰]" en_name="d_heishuai" />
+	<emotion ch_name="[d炸弹]" en_name="d_heizhadan" />
+	<emotion ch_name="[d定时]" en_name="d_dingshi" />
+	<emotion ch_name="[e炸弹]" en_name="emoji_0x1f4a3" />
+	<emotion ch_name="[顶]" en_name="d_ding" />
+	<emotion ch_name="[熊猫]" en_name="d_xiongmao" />
+	<emotion ch_name="[猪头]" en_name="d_zhutou" />
+	
+	
+	<emotion ch_name="[爱你]" en_name="d_aini" />
+
+	<emotion ch_name="[拜拜]" en_name="d_baibai" />
+	<emotion ch_name="[悲伤]" en_name="d_beishang" />
+	<emotion ch_name="[鄙视]" en_name="d_bishi" />
+	<emotion ch_name="[闭嘴]" en_name="d_bizui" />
+	<emotion ch_name="[馋嘴]" en_name="d_chanzui" />
+	<emotion ch_name="[d呲牙]" en_name="d_ciyaha" />
+	<emotion ch_name="[d酷]" en_name="d_cool" />
+	<emotion ch_name="[d得意]" en_name="d_deyi" />
+
+
+
+	<emotion ch_name="[吃惊]" en_name="d_chijing" />
+	<emotion ch_name="[打哈欠]" en_name="d_dahaqi" />
+
+	<emotion ch_name="[愤怒]" en_name="d_fennu" />
+	<emotion ch_name="[感冒]" en_name="d_ganmao" />
+	<emotion ch_name="[鼓掌]" en_name="d_guzhang" />
+	<emotion ch_name="[哈哈]" en_name="d_haha" />
+	<emotion ch_name="[害羞]" en_name="d_haixiu" />
+	<emotion ch_name="[汗]" en_name="d_han" />
+	<emotion ch_name="[呵呵]" en_name="d_hehe" />
+	<emotion ch_name="[黑线]" en_name="d_heixian" />
+	<emotion ch_name="[哼]" en_name="d_heng" />
+	<emotion ch_name="[花心]" en_name="d_huaxin" />
+	<emotion ch_name="[可爱]" en_name="d_keai" />
+	<emotion ch_name="[可怜]" en_name="d_kelian" />
+	<emotion ch_name="[哭]" en_name="d_ku" />
+	<emotion ch_name="[困]" en_name="d_kun" />
+	<emotion ch_name="[懒得理你]" en_name="d_landelini" />
+	<emotion ch_name="[累]" en_name="d_lei" />
+
+	<emotion ch_name="[怒]" en_name="d_nu" />
+	<emotion ch_name="[怒骂]" en_name="d_numa" />
+
+	<emotion ch_name="[钱]" en_name="d_qian" />
+	<emotion ch_name="[亲亲]" en_name="d_qinqin" />
+	<emotion ch_name="[生病]" en_name="d_shengbing" />
+	<emotion ch_name="[失望]" en_name="d_shiwang" />
+
+	<emotion ch_name="[书呆子]" en_name="d_shudaizi" />
+	<emotion ch_name="[睡觉]" en_name="d_shuijiao" />
+	<emotion ch_name="[思考]" en_name="d_sikao" />
+	<emotion ch_name="[太开心]" en_name="d_taikaixin" />
+	<emotion ch_name="[偷笑]" en_name="d_touxiao" />
+	<emotion ch_name="[吐]" en_name="d_tu" />
+
+	<emotion ch_name="[挖鼻屎]" en_name="d_wabishi" />
+	<emotion ch_name="[委屈]" en_name="d_weiqu" />
+	
+	<emotion ch_name="[嘻嘻]" en_name="d_xixi" />
+	<emotion ch_name="[嘘]" en_name="d_xu" />
+	<emotion ch_name="[阴险]" en_name="d_yinxian" />
+	<emotion ch_name="[疑问]" en_name="d_yiwen" />
+	<emotion ch_name="[右哼哼]" en_name="d_youhengheng" />
+	<emotion ch_name="[晕]" en_name="d_yun" />
+	<emotion ch_name="[抓狂]" en_name="d_zhuakuang" />
+	
+	
+	<emotion ch_name="[做鬼脸]" en_name="d_zuoguilian" />
+	<emotion ch_name="[左哼哼]" en_name="d_zuohengheng" />
+	<emotion ch_name="[e微笑]" en_name="emoji_0x1f60a" />
+	<emotion ch_name="[e害羞]" en_name="emoji_0x1f60c" />
+	<emotion ch_name="[e色]" en_name="emoji_0x1f60d" />
+	<emotion ch_name="[e印象]" en_name="emoji_0x1f60f" />
+	<emotion ch_name="[e亲亲]" en_name="emoji_0x1f61a" />
+	<emotion ch_name="[e吐舌]" en_name="emoji_0x1f61c" />
+	<emotion ch_name="[e大吐舌头]" en_name="emoji_0x1f61d" />
+	<emotion ch_name="[e难过]" en_name="emoji_0x1f61e" />
+	<emotion ch_name="[e睡]" en_name="emoji_0x1f62a" />
+	<emotion ch_name="[e流泪]" en_name="emoji_0x1f62d" />
+	<emotion ch_name="[e龇牙]" en_name="emoji_0x1f601" />
+	<emotion ch_name="[e笑哭了]" en_name="emoji_0x1f602" />
+	<emotion ch_name="[e笑]" en_name="emoji_0x1f603" />
+	<emotion ch_name="[e哈哈]" en_name="emoji_0x1f604" />
+	<emotion ch_name="[e调皮]" en_name="emoji_0x1f609" />
+	<emotion ch_name="[e伤心]" en_name="emoji_0x1f612" />
+	<emotion ch_name="[e汗]" en_name="emoji_0x1f613" />
+	<emotion ch_name="[e委屈]" en_name="emoji_0x1f614" />
+	<emotion ch_name="[e小囧]" en_name="emoji_0x1f616" />
+	<emotion ch_name="[e飞吻]" en_name="emoji_0x1f618" />
+	<emotion ch_name="[e怒了]" en_name="emoji_0x1f620" />
+	<emotion ch_name="[e面红耳赤]" en_name="emoji_0x1f621" />
+	<emotion ch_name="[e汗了]" en_name="emoji_0x1f622" />
+	<emotion ch_name="[e纠结]" en_name="emoji_0x1f623" />
+	<emotion ch_name="[e汗汗]" en_name="emoji_0x1f625" />
+	<emotion ch_name="[e惊恐]" en_name="emoji_0x1f628" />
+	<emotion ch_name="[e惊恐汗]" en_name="emoji_0x1f630" />
+	<emotion ch_name="[e恐怖]" en_name="emoji_0x1f631" />
+	<emotion ch_name="[e闭眼]" en_name="emoji_0x1f632" />
+	<emotion ch_name="[e呆子]" en_name="emoji_0x1f633" />
+	<emotion ch_name="[e口罩]" en_name="emoji_0x1f637" />
+
+	<!-- -->
+	<emotion ch_name="[e房子]" en_name="emoji_0x1f3e0" />
+	
+	
+	<emotion ch_name="[eiphone]" en_name="emoji_0x1f4f1" />
+	<emotion ch_name="[e闪闪发光]" en_name="emoji_0x1f31f" />
+	<emotion ch_name="[e向日葵]" en_name="emoji_0x1f33b" />
+	<emotion ch_name="[e啤酒]" en_name="emoji_0x1f37a" />
+	
+	<emotion ch_name="[e肌肉]" en_name="emoji_0x1f4aa" />
+	<emotion ch_name="[e拳头]" en_name="emoji_0x1f44a" />
+	<emotion ch_name="[e拳头]" en_name="emoji_0x270a" />
+	<emotion ch_name="[eyeah]" en_name="emoji_0x270c" />
+	<emotion ch_name="[eOK]" en_name="emoji_0x1f44c" />
+	<emotion ch_name="[e强悍]" en_name="emoji_0x1f44d" />
+	<emotion ch_name="[e弱]" en_name="emoji_0x1f44e" />
+	<emotion ch_name="[e鼓掌]" en_name="emoji_0x1f44f" />
+	<emotion ch_name="[e↑]" en_name="emoji_0x1f446" />
+	<emotion ch_name="[e↓]" en_name="emoji_0x1f447" />
+	<emotion ch_name="[e←]" en_name="emoji_0x1f448" />
+	<emotion ch_name="[e→]" en_name="emoji_0x1f449" />
+	<emotion ch_name="[e阿弥陀佛]" en_name="emoji_0x1f64f" />
+	
+	
+	<emotion ch_name="[e吐舌头]" en_name="emoji_0x1f47b" />
+	<emotion ch_name="[e愤怒]" en_name="emoji_0x1f47f" />
+	
+	<emotion ch_name="[e放大镜]" en_name="emoji_0x1f50d" />
+
+
+	
+
+	
+	<emotion ch_name="[e玫瑰]" en_name="emoji_0x1f339" />
+	<emotion ch_name="[e枫叶]" en_name="emoji_0x1f341" />
+	<emotion ch_name="[e树叶]" en_name="emoji_0x1f343" />
+	<emotion ch_name="[e蝴蝶结]" en_name="emoji_0x1f380" />
+	<emotion ch_name="[e礼物]" en_name="emoji_0x1f381" />
+	<emotion ch_name="[e蛋糕]" en_name="emoji_0x1f382" />
+	<emotion ch_name="[e圣诞老人]" en_name="emoji_0x1f385" />
+	<emotion ch_name="[e连衣裙]" en_name="emoji_0x1f457" />
+	
+	<emotion ch_name="[兔子]" en_name="d_tuzi" />
+	<emotion ch_name="[e狐狸]" en_name="emoji_0x1f431" />
+	<emotion ch_name="[e小狗]" en_name="emoji_0x1f436" />
+	
+	
+	
+	<emotion ch_name="[e男孩]" en_name="emoji_0x1f466" />
+	<emotion ch_name="[e女孩]" en_name="emoji_0x1f467" />
+	<emotion ch_name="[男孩儿]" en_name="d_nanhaier" />
+	<emotion ch_name="[女孩儿]" en_name="d_nvhaier" />
+	<emotion ch_name="[e男人]" en_name="emoji_0x1f468" />
+	<emotion ch_name="[e女人]" en_name="emoji_0x1f469" />
+	<emotion ch_name="[e心碎了]" en_name="emoji_0x1f494" />
+	<emotion ch_name="[e❤]" en_name="emoji_0x2764" />
+	<emotion ch_name="[e红唇]" en_name="emoji_0x1f444" />
+	<emotion ch_name="[d心碎]" en_name="d_hart_cut" />
+	
+	<emotion ch_name="[e时钟]" en_name="emoji_0x1f559" />
+
+
+
+	<emotion ch_name="[e小汽车]" en_name="emoji_0x1f697" />
+	
+	<emotion ch_name="[e钻石]" en_name="emoji_0x1f48e" />
+	<emotion ch_name="[e月亮]" en_name="emoji_0x1f319" />
+	<emotion ch_name="[e雷电]" en_name="emoji_0x26a1" />
+	<emotion ch_name="[e太阳]" en_name="emoji_0x2600" />
+	<emotion ch_name="[e云彩]" en_name="emoji_0x2601" />
+	<emotion ch_name="[e雨伞]" en_name="emoji_0x2614" />
+	
+	
+	<emotion ch_name="[e足球]" en_name="emoji_0x26bd" />
+	<emotion ch_name="[e咖啡]" en_name="emoji_0x2615" />
+
+	<!-- -->
+	<emotion ch_name="[f给力]" en_name="f_geili" />
+	
+	<emotion ch_name="[f萌]" en_name="f_meng" />
+	<emotion ch_name="[f互粉]" en_name="f_hufen" />
+	<emotion ch_name="[f神马]" en_name="f_shenma" />
+	<emotion ch_name="[f帅]" en_name="f_shuai" />
+	<emotion ch_name="[fV5]" en_name="f_v5" />
+	<emotion ch_name="[o蜡烛]" en_name="o_lazhu" />
+	<emotion ch_name="[f囍]" en_name="f_xi" />
+	<emotion ch_name="[f织]" en_name="f_zhi" />
+	<emotion ch_name="[face313]" en_name="face313" />
+	<emotion ch_name="[face315]" en_name="face315" />
+	<!-- -->
+	<emotion ch_name="[o冰棍儿]" en_name="o_bingun" />
+	<emotion ch_name="[o风扇]" en_name="o_fengshan" />
+	<emotion ch_name="[o飞机]" en_name="o_feiji" />
+	
+	<emotion ch_name="[o干杯]" en_name="o_ganbei" />
+	<emotion ch_name="[o蛋糕]" en_name="o_dangao" />
+	<emotion ch_name="[o电影]" en_name="o_dianying" />
+	<emotion ch_name="[o发红包]" en_name="o_fahongbao" />
+	
+	<emotion ch_name="[o红丝带]" en_name="o_hongsidai" />
+	<emotion ch_name="[o话筒]" en_name="o_huatong" />
+	<emotion ch_name="[o咖啡]" en_name="o_kafei" />
+	
+	<emotion ch_name="[o礼物]" en_name="o_liwu" />
+	<emotion ch_name="[o绿丝带]" en_name="o_lvsidai" />
+	<emotion ch_name="[o汽车]" en_name="o_qiche" />
+	<emotion ch_name="[o实习]" en_name="o_shixi" />
+	<emotion ch_name="[o手机]" en_name="o_shouji" />
+	<emotion ch_name="[o手套]" en_name="o_shoutao" />
+	<emotion ch_name="[o微博]" en_name="o_weibo" />
+	<emotion ch_name="[o围观]" en_name="o_weiguan" />
+	<emotion ch_name="[o温暖帽子]" en_name="o_wennuanmaozi" />
+	<emotion ch_name="[o习惯]" en_name="o_xigua" />
+	<emotion ch_name="[o音乐]" en_name="o_yinyue" />
+	<emotion ch_name="[o照相机]" en_name="o_zhaoxiangji" />
+	<emotion ch_name="[o钟]" en_name="o_zhong" />
+	<emotion ch_name="[o自行车]" en_name="o_zixingche" />
+	<emotion ch_name="[o足球]" en_name="o_zuqiu" />
+	<!-- -->
+	<emotion ch_name="[d爱情]" en_name="d_aiqing" />
+	<emotion ch_name="[d飞吻]" en_name="d_feiwen" />
+	<emotion ch_name="[d绿球]" en_name="d_ball_green" />
+	<emotion ch_name="[d紫球]" en_name="d_ball_purple" />
+	<emotion ch_name="[d红球]" en_name="d_ball_red" />
+	<emotion ch_name="[d菜刀]" en_name="d_caidao" />
+	<emotion ch_name="[d旗帜]" en_name="d_flag" />
+	<emotion ch_name="[奥特曼]" en_name="d_aoteman" />
+	
+</emotions>
