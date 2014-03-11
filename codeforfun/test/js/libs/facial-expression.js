@@ -21,7 +21,7 @@ var facialXml = null;
 
 	$(document).ready(function(){  
                 $.ajax({  
-                    url: '/sq/file/fresh_emotion_face.xml',  
+                    url: '/Users/ScorpiusZjj/Documents/githubs/chaos/codeforfun/test/file/fresh_emotion_face.xml',  
                     dataType: 'xml',  
                     type: 'GET',
                     async: false,  

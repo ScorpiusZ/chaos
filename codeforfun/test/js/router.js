@@ -4,11 +4,6 @@ App.Router.map(function(){
     this.resource('welcome',{path :'/'});
 
     this.resource('topics',{path :'topics/:node_id'});
-    //this.resource('topics', { path: 'node/:node_id/topics' });
-
-	//this.resource('topic' ,{ path: 'topics/:topic_id' } , function(){
-		//this.resource('replies' , { path: 'replies/:topic_id' } );
-	//});
 
 });
 
@@ -62,11 +57,15 @@ App.Topics = Ember.Object.extend({
 
 App.Topics.reopenClass({
     findall:function(params){
-        return	$.getJSON("http://api.aihuo360.com/v2/nodes/"+params.cur_node_id+"/topics?"+
-            "page="+params.page+"&device_id=00001393578531256&per_page="+params.per
-            +"&filter="+params.filter ).then(function(data){
-                return data.topics
-            })
+        var links=[];
+        $.getJSON("http://api.aihuo360.com/v2/nodes/"+params.get('cur_node_id')+"/topics?"+
+            "page="+params.get('page')+"&device_id=00001393578531256&per_page="+params.get('per')
+            +"&filter="+params.get('filter')+"").then(function(data){
+                data.topics.forEach(function(t) {
+                    links.pushObject(t);
+                });
+            });
+        return links;
     },
 });
 
@@ -81,8 +80,7 @@ App.TopicsRoute = Ember.Route.extend({
             per: 20,
             filter: "new",
         });
-        var n=store.all('cachenode');
-        console.log('cache:'+n.cur_node_id);
+        var n=store.getById('cachenode',1);
         return App.Topics.findall(n)
-	},
+	}
 });

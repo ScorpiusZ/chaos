@@ -126,8 +126,8 @@
             {{#if topic.top}}
             <img src="images/fresh_topic_top_icon.png" style="float:right">
             {{/if}}
-            <label class="muted">{{facial topic.nickname}}</label>
-            {{facial topic.body}}
+            <label class="muted">{{topic.nickname}}</label>
+            {{topic.body}}
             <label class="muted text-right">{{format-date topic.created_at}}</label>
             <button {{action 'dislikeTopic' topic.id}} class="btn"><i class="icon-thumbs-down"></i> {{topic.disliked_count}}</button>
             <button class="btn"><i class="icon-comment"></i> {{topic.replies_count}}</button> 
