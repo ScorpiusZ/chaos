@@ -29,117 +29,60 @@ Ember.Handlebars.helper('facial' , function(input) {
 	var facialedText = facial.showFacial(input);
 	return new Handlebars.SafeString(showDown.makeHtml(facialedText));
 });
-//记录当前是在哪个社区
-var currentNodeId = null;
-var currentNode = null;
-//记录当前是最新、最热、我的等信息
-var currentTopicsFilter = 'new';
-//记录当前请求的页数
-var topicsPage = 1;
-//记录当前请求的每页的数目
-var topicsPagePer = 20;
-//当前是否在加载帖子列表
-var isTopicsLoading = true;
-//类：节点
-App.Node = Ember.Object.extend({
-
-});
-
-App.Node.reopenClass({
-    allNodes:[],
-	findAll: function(){
-		if(this.allNodes && this.allNodes.length>0)
-		{
-			return this.allNodes;
-		}
-		 var i = 0;
-		 $.getJSON('http://api.aihuo360.com/v2/nodes').then(function(data){
-			 data.nodes.map(function(node){
-				var n = App.Node.create(node);
-				// var n = store.createRecord(node);
-				n.topicsLink = "index#/node/"+n.id+"/topics";
-				n.iconLink = "images/fresh_article_cate_"+(i%6)+".png";
-				// n.set('topicsLink' , "saxer#/node/"+n.id+"/topics");
-				// n.set('iconLink' , "images/fresh_article_cate_"+(i%6)+".png");
-				i++;
-				App.Node.allNodes.pushObject(n);
-			});
-		});
-		return this.allNodes;
-	}
-});
 
 
 
-//类：帖子
-App.Topics = Ember.Object.extend({
-
-});
-
-App.Topics.reopenClass({
-    name:'Noname',
-    Per:20,
-    Page:1,
-    filter:'new',
-    isloading:false,
-	findAll: function(node_id){
-		var links = [];
-		$.getJSON("http://api.aihuo360.com/v2/nodes/"+node_id+"/topics?"+
-		 	      "page="+App.Topics.Page+"&device_id=00001393578531256&per_page="+App.Topics.Per
-			      +"&filter="+App.Topics.filter).then(function(data){
-			data.topics.forEach(function(t){
-                links.pushObject(t);
-            });
-		});    
-
-	  return links;
-	}
-});
-
-
-//获取社区节点列表
 App.ApplicationRoute = Ember.Route.extend({
 });
 
+//获取node 列表
 App.WelcomeRoute = Ember.Route.extend({
-	beforeModel: function(transition){
-		console.log(new Date()+"before:"+transition);
-	},
-
-	model: function(){
-		return App.Node.findAll();
-	},
-
-	afterModel: function(nodes,transition){
-			console.log(new Date()+"after:"+nodes);
-		if(nodes.length>0)
-		{
-			console.log(new Date()+"afterChange:"+nodes);
-		}
-},
-
-	setupController: function(controller,model){
-		this._super(controller,model);
-		console.log(new Date()+"setupController:"+model);
-	}
-
+    model: function(){
+        var i = 0;
+        var store=this.store;
+        $.getJSON('http://api.aihuo360.com/v2/nodes').then(function(data){
+    data.nodes.map(function(node){
+        var iconLink = "images/fresh_article_cate_"+(i%6)+".png";
+        i++;
+        store.push('nodes',{
+            id: node.id,
+            name: node.name,
+            summary: node.summary,
+            topics_count: node.topics_count,
+            iconLink : iconLink,
+        });
+    });
+    });
+           return this.store.all('nodes');
+    },
 });
 
+App.Topics = Ember.Object.extend({
+});
 
-//【路由】获取帖子列表
+App.Topics.reopenClass({
+    findall:function(params){
+        return	$.getJSON("http://api.aihuo360.com/v2/nodes/"+params.cur_node_id+"/topics?"+
+            "page="+params.page+"&device_id=00001393578531256&per_page="+params.per
+            +"&filter="+params.filter ).then(function(data){
+                return data.topics
+            })
+    },
+});
+
+//获取帖子列表
 App.TopicsRoute = Ember.Route.extend({
-
 	model: function(params){
-		return App.Topics.findAll(params.node_id);
+        var store=this.store;
+        store.push('cachenode',{
+            id: 1,
+            cur_node_id: params.node_id,
+            page: 1,
+            per: 20,
+            filter: "new",
+        });
+        var n=store.all('cachenode');
+        console.log('cache:'+n.cur_node_id);
+        return App.Topics.findall(n)
 	},
-
-	afterModel: function(){
-		// this.set('node',this.modelFor('application'));
-		console.log('node:'+this.modelFor('application'));
-	},
-
-	setupController: function(controller,model){
-		this._super(controller,model);
-		console.log('noded:'+this.modelFor('application'));
-	}
 });

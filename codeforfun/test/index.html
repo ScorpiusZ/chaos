@@ -28,10 +28,11 @@
 <!--views-->
 
 <!--models-->
+<script src="js/models/Nodes.js"></script>
+<script src="js/models/Cache.js"></script>
 
 </head>
 <body>
-
 
 <script type="text/x-handlebars" >
 {{outlet}}
@@ -53,9 +54,7 @@
       <div class="row">
         {{#each node in model}}
           <div class="span3 offset2">
-            <a {{bind-attr href="node.topicsLink"}}>
             <img {{bind-attr src="node.iconLink"}} style="width:80px;height:80px" class="img-circle">
-            </a>
             <h4>{{node.name}}</h4>
             <p class="muted">帖子：{{node.topics_count}}</p>
             <p class="muted">{{node.summary}}</p>
@@ -127,17 +126,12 @@
             {{#if topic.top}}
             <img src="images/fresh_topic_top_icon.png" style="float:right">
             {{/if}}
-
-            <label class="muted">{{ topic.nickname}}</label>
-            {{ topic.body}}
+            <label class="muted">{{facial topic.nickname}}</label>
+            {{facial topic.body}}
             <label class="muted text-right">{{format-date topic.created_at}}</label>
             <button {{action 'dislikeTopic' topic.id}} class="btn"><i class="icon-thumbs-down"></i> {{topic.disliked_count}}</button>
             <button class="btn"><i class="icon-comment"></i> {{topic.replies_count}}</button> 
             <button {{action 'likeTopic' topic.id}} class="btn"><i class="icon-thumbs-up"></i> {{topic.liked_count}}</button>
-
-            <!--<a {{bind-attr href="topic.replylink"}}>-->
-            <!--<button class="btn"><i class="icon-info-sign"></i> 帖子详情 </button>-->
-            <!--</a>-->
           </td>
         </tr>
       {{/each}}
