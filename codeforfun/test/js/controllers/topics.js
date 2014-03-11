@@ -1,5 +1,6 @@
 //【控制器】主题列表
 App.TopicsController = Ember.ObjectController.extend({
+    node:null,
 	actions:{
 		//查看最新、最热等
 		filter: function(filter_v){
@@ -20,7 +21,6 @@ App.TopicsController = Ember.ObjectController.extend({
 		//查看下一页
 		page: function(){
 		},
-
 		//喜欢某一个帖子
 		likeTopic: function(topic_id){
 		},

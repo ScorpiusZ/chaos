@@ -81,6 +81,9 @@ App.TopicsRoute = Ember.Route.extend({
             filter: "new",
         });
         var n=store.getById('cachenode',1);
-        return App.Topics.findall(n)
+        var m=store.getById('nodes',n.get('cur_node_id'));
+        console.log('node = ',m.get('name'));
+        this.set('node',m);
+        return App.Topics.findall(n);
 	}
 });
