@@ -5,6 +5,8 @@ App.Router.map(function(){
 
     this.resource('topics',{path :'topics/:node_id'});
 
+    this.resource('topic',{path :'topic/:topic_id'});
+
 });
 
 //格式化时间，显示 X分钟之前 类似这样的格式
@@ -67,6 +69,16 @@ App.Topics.reopenClass({
             });
         return links;
     },
+    findnextpage:function(olddata,params){
+        $.getJSON("http://api.aihuo360.com/v2/nodes/"+params.get('cur_node_id')+"/topics?"+
+            "page="+params.get('page')+"&device_id=00001393578531256&per_page="+params.get('per')
+            +"&filter="+params.get('filter')+"").then(function(data){
+                data.topics.forEach(function(t) {
+                    olddata.pushObject(t);
+                });
+            });
+        return olddata;
+    }
 });
 
 //获取帖子列表
@@ -82,8 +94,41 @@ App.TopicsRoute = Ember.Route.extend({
         });
         var n=store.getById('cachenode',1);
         var m=store.getById('nodes',n.get('cur_node_id'));
-        console.log('node = ',m.get('name'));
         this.set('node',m);
         return App.Topics.findall(n);
 	}
+});
+
+App.Reply = Ember.Object.extend({
+});
+
+App.Reply.reopenClass({
+    findall:function(topic_id){
+        var links=[];
+        $.getJSON('http://api.aihuo360.com/v2/topics/'+topic_id+'/replies').then(function(data){
+    data.replies.forEach(function(t){
+        links.pushObject(t);
+        });
+    });
+            return links;
+    },
+});
+//帖子详情
+App.TopicRoute = Ember.Route.extend({
+    model:function(topic){
+        var store=this.store;
+        store.push('cachetopic',{
+            id: 1,
+            cur_topic_id: topic.topic_id,
+            page: 1,
+            per: 20,
+        });
+        console.log('route');
+        return topic;
+    }
+});
+
+App.ReplyRoute = Ember.Route.extend({
+    model:function(){
+    }
 });
