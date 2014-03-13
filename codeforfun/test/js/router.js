@@ -5,7 +5,8 @@ App.Router.map(function(){
 
     this.resource('topics',{path :'topics/:node_id'});
 
-    this.resource('topic',{path :'topic/:topic_id'});
+    //this.resource('topic');
+    this.resource('topic',{path :'topic/:topic'});
 
 });
 
@@ -93,17 +94,20 @@ App.TopicsRoute = Ember.Route.extend({
             filter: "new",
         });
         var n=store.getById('cachenode',1);
-        var m=store.getById('nodes',n.get('cur_node_id'));
-        this.set('node',m);
         return App.Topics.findall(n);
 	}
 });
 
-App.Reply = Ember.Object.extend({
+App.Topic = Ember.Object.extend({
 });
 
-App.Reply.reopenClass({
-    findall:function(topic_id){
+App.Topic.reopenClass({
+    gettopic:function(topic_id){
+        return $.getJSON('http://api.aihuo360.com/v2/topics/'+topic_id).then(function(data){
+    return data;
+    });
+    },
+    getreply:function(topic_id){
         var links=[];
         $.getJSON('http://api.aihuo360.com/v2/topics/'+topic_id+'/replies').then(function(data){
     data.replies.forEach(function(t){
@@ -115,20 +119,28 @@ App.Reply.reopenClass({
 });
 //帖子详情
 App.TopicRoute = Ember.Route.extend({
-    model:function(topic){
+    model: function(topic){
+        console.log('TopicRoute model'+topic);
+    },
+    setupController: function(controller,model){
+        console.log('setupController');
         var store=this.store;
-        store.push('cachetopic',{
-            id: 1,
-            cur_topic_id: topic.topic_id,
-            page: 1,
-            per: 20,
-        });
-        console.log('route');
-        return topic;
+        var cur_topic=store.getById('cachetopic',1);
+        //var topic=App.Topic.gettopic(cur_topic.get('cur_topic_id'));
+        //controller.get('topic');
+        controller.set('replies',App.Topic.getreply(cur_topic.get('cur_topic_id')));
+        console.log('get replies');
+        //controller.set('topic',topic);
+        console.log('get topic');
+    },
+    afterModel:function(){
     }
 });
 
-App.ReplyRoute = Ember.Route.extend({
+App.Reply = Ember.Route.extend({
     model:function(){
+        console.log('Reply model');
+    },
+    setupController: function(controller,model){
     }
 });

@@ -1,6 +1,7 @@
 App.TopicsItem = Ember.View.extend({
-    name:null,
+    item:null,
     click:function(){
-        console.log('view on click'+name);
+        console.log('view on click'+this.item);
+        this.get('controller').send('seedetail',this.item);
     }
 });

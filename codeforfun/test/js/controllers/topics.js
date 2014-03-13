@@ -45,9 +45,20 @@ App.TopicsController = Ember.ObjectController.extend({
 
 		//讨厌某一个帖子
 		dislikeTopic: function(topic_id){
-		}
-
-	}//End Actions
+		},
+        //帖子详情
+        seedetail:function(topic){
+            console.log('controller seedetail'+topic.id);
+            var store=this.store;
+            store.push('cachetopic',{
+                id: 1,
+                cur_topic_id: topic.id,
+                page: 1,
+                per: 20,
+            });
+            this.transitionToRoute('topic',topic);
+        }
+	}//End Action
 
 });
 
