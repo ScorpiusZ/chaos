@@ -126,10 +126,17 @@ App.TopicRoute = Ember.Route.extend({
         console.log('setupController');
         var store=this.store;
         var cur_topic=store.getById('cachetopic',1);
-        //var topic=App.Topic.gettopic(cur_topic.get('cur_topic_id'));
+        //var topic=store.getById('topic',cur_topic.get('cur_topic_id'));
         //controller.get('topic');
         controller.set('replies',App.Topic.getreply(cur_topic.get('cur_topic_id')));
-        console.log('get replies');
+        //console.log('get replies'+topic.get('body'));
+        //controller.set('id', topic.get('id'));
+        //controller.set('body', topic.get('body'));
+        //controller.set('nickname', topic.get('nickname'));
+        //controller.set('liked_count', topic.get('liked_count'));
+        //controller.set('disliked_count', topic.get('disliked_count'));
+        //controller.set('replies_count', topic.get('replies_count'));
+        //controller.set('created_at', topic.get('created_at'));
         //controller.set('topic',topic);
         console.log('get topic');
     },

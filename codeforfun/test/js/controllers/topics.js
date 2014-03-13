@@ -56,7 +56,16 @@ App.TopicsController = Ember.ObjectController.extend({
                 page: 1,
                 per: 20,
             });
-            this.transitionToRoute('topic',topic);
+            store.push('topic',{
+                id: topic.id,
+                body: topic.body,
+                nickname: topic.nickname,
+                liked_count: topic.liked_count,
+                disliked_count: topic.disliked_count,
+                replies_count: topic.replies_count,
+                created_at: topic.created_at,
+            });
+            this.transitionToRoute('topic',topic.id);
         }
 	}//End Action
 
