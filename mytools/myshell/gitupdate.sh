@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #edit by Zjj
 
 if [ "$1" == "pull" ]; then
