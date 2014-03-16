@@ -1,0 +1,9 @@
+#generate a string of 16 chars in ")(*&^%$#@!A-Z-a-z-0-9)"
+</dev/urandom tr -dc \)\(\*i\&\^\%\$\#\@\!A-Z-a-z-0-9| head -c${1:-16};echo;
+
+#生成随机密码 (16位)
+openssl rand -base64 16
+
+#切割大文件  还原大文件
+split –b 100m /path/to/large/archive /path/to/output/files
+cat files* > archive
