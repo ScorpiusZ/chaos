@@ -1,5 +1,5 @@
 App.CreatetopicController = Ember.ObjectController.extend({
-    nickname:"匿名用户",
+    nickname:null,
     actions:{
         publish: function(){
             var store=this.store;
@@ -10,6 +10,7 @@ App.CreatetopicController = Ember.ObjectController.extend({
             console.log('content = '+content);
             var usr=store.getById('user',1);
             console.log('nickname = '+usr.get('nickname'));
+
         }
     }
 });

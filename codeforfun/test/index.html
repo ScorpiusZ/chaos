@@ -1,49 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-<style type="text/css">
+<meta charset="utf-8" >
+<style type="text/css" >
 </style>
 <title>Topfun Community</title>
-<link rel="stylesheet" href="css/normalize.css">
-<link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="http://getbootstrap.com/2.3.2/assets/css/bootstrap.css">
-<link rel="stylesheet" href="http://getbootstrap.com/2.3.2/assets/css/bootstrap-responsive.css">
+<link rel="stylesheet" href="css/normalize.css" >
+<link rel="stylesheet" href="css/style.css" >
+<link rel="stylesheet" href="http://getbootstrap.com/2.3.2/assets/css/bootstrap.css" >
+<link rel="stylesheet" href="http://getbootstrap.com/2.3.2/assets/css/bootstrap-responsive.css" >
 
 <!--lib-->
-<script src="js/libs/moment-with-langs.js"></script>
-<script src="js/libs/showdown.js"></script>
-<script src="js/libs/facial-expression.js"></script>
-<script src="js/libs/jquery-1.10.2.js"></script>
-<script src="js/libs/handlebars-1.1.2.js"></script>
-<script src="js/libs/ember-1.4.0.js"></script>
-<script src="js/libs/ember-data.js"></script>
-<script src="js/app.js"></script>
-<script src="js/router.js"></script>
+<script src="js/libs/moment-with-langs.js" ></script>
+<script src="js/libs/showdown.js" ></script>
+<script src="js/libs/facial-expression.js" ></script>
+<script src="js/libs/jquery-1.10.2.js" ></script>
+<script src="js/libs/handlebars-1.1.2.js" ></script>
+<script src="js/libs/ember-1.4.0.js" ></script>
+<script src="js/libs/ember-data.js" ></script>
+<script src="js/app.js" ></script>
+<script src="js/router.js" ></script>
 
 <!--controllers-->
-<script src="js/controllers/application.js"></script>
-<script src="js/controllers/topic.js"></script>
-<script src="js/controllers/topics.js"></script>
-<script src="js/controllers/welcome.js"></script>
-<script src="js/controllers/createtopic.js"></script>
+<script src="js/controllers/application.js" ></script>
+<script src="js/controllers/topic.js" ></script>
+<script src="js/controllers/topics.js" ></script>
+<script src="js/controllers/welcome.js" ></script>
+<script src="js/controllers/createtopic.js" ></script>
 
 
 <!--views-->
-<script src="js/views/topics.js"></script>
-<script src="js/views/node.js"></script>
+<script src="js/views/topics.js" ></script>
+<script src="js/views/node.js" ></script>
 
 <!--models-->
-<script src="js/models/Nodes.js"></script>
-<script src="js/models/Cache.js"></script>
-<script src="js/models/User.js"></script>
+<script src="js/models/Nodes.js" ></script>
+<script src="js/models/Cache.js" ></script>
+<script src="js/models/User.js" ></script>
 
 <!--route-->
-<script src="js/route/Application.js"></script>
-<script src="js/route/Topic.js"></script>
-<script src="js/route/Topics.js"></script>
-<script src="js/route/Welcome.js"></script>
-<script src="js/route/Createtopic.js"></script>
+<script src="js/route/Application.js" ></script>
+<script src="js/route/Topic.js" ></script>
+<script src="js/route/Topics.js" ></script>
+<script src="js/route/Welcome.js" ></script>
+<script src="js/route/Createtopic.js" ></script>
 
 
 </head>
@@ -53,190 +53,177 @@
 {{outlet}}
 </script>
 
+<!--社区node 列表 template-->
 <script type="text/x-handlebars" id='welcome'>
-<div id="fresh_nav" align="center">
-    <div class="row-fluid">
-      <div class="span4"></div>
-      <div class="span4">
-        <label class="fresh_nav_title">微趣</label>
-      </div>
-      <div class="span4">
-        <button class="btn fresh_nav_button btn-inverse" {{action 'usersetting'}}><i class="icon-user icon-white"></i>&nbsp;账户设置</button>
-      </div>
+
+<div id="fresh_nav" align="center" >
+    <div class="row-fluid" >
+           <span class="fresh_nav_title" >微趣</span> 
+           <button class="btn fresh_nav_right_button btn-inverse" {{action 'usersetting'}}>
+               <i class="icon-user icon-white" ></i>&nbsp;账户设置</button>
     </div>
   </div>
-  <div class="container marketing" align="center" style="margin-top:55px">
+
+<div class="container marketing" align="center" style="margin-top:55px" >
       {{#if edituser}}
-        <h2>hehe</h2>
         <p>{{input type="text" value=username}}</p>
         <button class="btn  btn-inverse" {{action 'commitsetting'}}> &nbsp;保存</button>
       {{/if}}
-      <div class="row">
-        {{#each node in model}}
+      <div class="row" >
+        {{#each node in nodes}}
           {{#view App.NodeItem itemid=node.id}}
-          <div class="span3 offset2">
-            <img {{bind-attr src="node.iconLink"}} style="width:80px;height:80px" class="img-circle">
-            <h4>{{node.name}}</h4>
-            <p class="muted">帖子：{{node.topics_count}}</p>
-            <p class="muted">{{node.summary}}</p>
+          <div class="span3 offset2" >
+            <img {{bind-attr src="node.iconLink"}} style="width:80px;height:80px" class="img-circle" >
+            <h4 style="color:black" >{{node.name}}</h4>
+            <p class="muted" >帖子：{{node.topics_count}}</p>
+            <p class="muted" >{{node.summary}}</p>
           </div>
           {{/view}}
         {{/each}}
       </div>
 </div>
 
+{{#if isloading}}
+<div class="fresh_loading">
+<p>isloading ....</p>
+</div>
+{{/if}}
+
 </script>
 
-
+<!--帖子列表 template-->
 <script type="text/x-handlebars" id='topics'>
-<div id="fresh_nav" align="center">
-    <div class="row-fluid">
-      <div class="span4">
-        <ul class="pager" style="margin-top:8px;margin-left:10px">
-          <li class="previous">
-              <a href="javascript:history.back()">&larr;返回</a>
-          </li>
-        </ul>
-      </div>
-      <div class="span4">
-        <label class="fresh_nav_title">
-        {{nodename}}
-        </label>
-      </div>
-      <div class="span4">
-        <button class="btn fresh_nav_button btn-inverse" {{action 'createtopic'}} ><i class="icon-edit icon-white"></i>&nbsp;发帖</button>
-      </div>
+
+<div id="fresh_nav" align="center" >
+    <div class="row-fluid" >
+        <a class="btn fresh_nav_left_button" href="javascript:history.back()" >&larr;返回</a>
+        <span class="fresh_nav_title" > {{nodename}} </span>
+        <button class="btn fresh_nav_right_button btn-inverse" {{action 'createtopic'}} >
+            <i class="icon-edit icon-white" ></i>&nbsp;发帖</button>
+
+      <ul class="nav nav-pills"  style="margin-top:5px" >
+          <li><a {{action 'filter' 'all'}}>全部</a></li>
+          <li><a {{action 'filter' 'hot'}}>最热</a></li>
+          <li><a {{action 'filter' 'new'}}>最新</a></li>
+          <li><a {{action 'filter' 'mine'}}>我的</a></li>
+      </ul>
+ 
     </div>
 </div>
 
-
-  <ul class="nav nav-pills" style="margin-top:55px;align:center">
-    {{#if isFilterAll}}
-      <li class="disabled"><a>全部</a></li>
-    {{else}}
-      <li><a {{action 'filter' 'all'}}>全部</a></li>
-    {{/if}}
-
-    {{#if isFilterHot}}
-      <li class="disabled"><a>最热</a></li>
-    {{else}}
-      <li><a {{action 'filter' 'hot'}}>最热</a></li>
-    {{/if}}
-
-    {{#if isFilterNew}}
-      <li class="disabled"><a>最新</a></li>
-    {{else}}
-      <li><a {{action 'filter' 'new'}}>最新</a></li>
-    {{/if}}
-
-    {{#if isFilterMine}}
-      <li class="disabled"><a>我的</a></li>
-    {{else}}
-      <li><a {{action 'filter' 'mine'}}>我的</a></li>
-    {{/if}}
-  </ul>
-
-    <table class="table table-bordered table-hover">
-      {{#each topic in topics}}
-        <tr>
-          <td >
-            {{#view App.TopicsItem item=topic}}
-            {{#if topic.top}}
-            <img src="images/fresh_topic_top_icon.png" style="float:right">
-            {{/if}}
-            <label class="muted">{{topic.nickname}}</label>
-            {{topic.body}}
-            <label class="muted text-right">{{format-date topic.created_at}}</label>
-            {{/view}}
-            <button {{action 'dislikeTopic' topic.id}} class="btn"><i class="icon-thumbs-down"></i> {{topic.disliked_count}}</button>
-            <button class="btn"><i class="icon-comment"></i> {{topic.replies_count}}</button> 
-            <button {{action 'likeTopic' topic.id}} class="btn"><i class="icon-thumbs-up"></i> {{topic.liked_count}}</button>
-          </td>
-        </tr>
-      {{/each}}
-    </table>
-
-    <div align="center">
-      <button {{action 'page'}} class="btn btn-primary">&nbsp;点击加载更多&nbsp;</button>
-    </div>
-
-</script>
-
-<script type="text/x-handlebars" id='topic'>
-<div id="fresh_nav" align="center">
-   <div class="row-fluid">
-     <div class="span4">
-       <ul class="pager" style="margin-top:8px;margin-left:10px">
-         <li class="previous">
-          <a href="javascript:history.back()">&larr;返回</a>
-         </li>
-       </ul>
-     </div>
-     <div class="span4">
-       <label class="fresh_nav_title">微趣正文</label>
-     </div>
-     <div class="span4">
-       <button class="btn fresh_nav_button btn-primary"><i class="icon-share icon-white"></i>&nbsp;转发</button>
-     </div>
-   </div>
- </div>
-    
-
-<div style="margin-top:55px">
-      <label class="muted">{{nickname}}</label>
-          {{body}}
-      <label class="muted text-right">{{format-date created_at}}</label>
-      <table style="width:100%"><tr><td>
-      <button {{action 'dislikeTopic' id}} class="btn"><i
-      class="icon-thumbs-down"></i> {{disliked_count}}</button>
-      </td><td align="center">
-      <button class="btn"><i class="icon-comment"></i> {{replies_count}}</button>
-      </td><td align="right"> 
-      <button {{action 'likeTopic' id}} class="btn"><i
-      class="icon-thumbs-up"></i> {{liked_count}}</button>
-      </td></tr></table>
-</div>
-
-<table class="table table-hover">
-  {{#each reply in replies}}
+<table class="table table-bordered table-hover" style="margin-top:85px;align:center" >
+  {{#each topic in topics}}
     <tr>
-      <td>
-        <label class="muted">{{reply.nickname}}</label>
-        {{reply.body}}
-        <label class="muted text-right">{{format-date reply.created_at}}</label>
+      <td >
+        {{#view App.TopicsItem item=topic}}
+        {{#if topic.top}}
+        <img src="images/fresh_topic_top_icon.png" style="float:right" >
+        {{/if}}
+        <label class="muted" >{{topic.nickname}}</label>
+        {{topic.body}}
+        <label class="muted text-right" >{{format-date topic.created_at}}</label>
+        {{/view}}
+        <button {{action 'dislikeTopic' topic.id}} class="btn" ><i class="icon-thumbs-down" ></i> {{topic.disliked_count}}</button>
+        <button class="btn" ><i class="icon-comment" ></i> {{topic.replies_count}}</button> 
+        <button {{action 'likeTopic' topic.id}} class="btn" ><i class="icon-thumbs-up" ></i> {{topic.liked_count}}</button>
       </td>
     </tr>
   {{/each}}
 </table>
 
-<div align="center">
-      <button {{action 'page'}} class="btn btn-primary">&nbsp;点击加载更多&nbsp;</button>
+{{#if ismore}}
+<div align="center" >
+  <button {{action 'page'}} class="btn btn-primary" >&nbsp;点击加载更多&nbsp;</button>
 </div>
+{{/if}}
+
+{{#if isloading}}
+<div class="fresh_loading">
+<p>isloading ....</p>
+</div>
+{{/if}}
+
 </script>
 
-<script type="text/x-handlebars" id='createtopic'>
-<div id="fresh_nav" align="center">
-<div class="row-fluid">
-     <div class="span4">
-       <ul class="pager" style="margin-top:8px;margin-left:10px">
-         <li class="previous">
-          <a href="javascript:history.back()">&larr;返回</a>
-         </li>
-       </ul>
-     </div>
-     <div class="span4">
-           <label class="fresh_nav_title">发帖</label>
-     </div>
-     <div class="span4">
-        <button class="btn fresh_nav_button btn-inverse" {{action 'publish'}} >
-        <i class="icon-edit icon-white"></i>&nbsp;发送</button>
-     </div>
-</div>
-</div>
-<h2 style="margin-top:55px;align:center">this is createtopic</h2>
-<h4>{{nickname}}</h4>
-<p>{{textarea value=content}}</p>
+<!--帖子详情 template-->
+<script type="text/x-handlebars" id='topic'>
 
+<div id="fresh_nav" align="center" >
+    <div class="row-fluid" >
+        <a class="btn fresh_nav_left_button" href="javascript:history.back()" >&larr;返回</a>
+        <span class="fresh_nav_title" >微趣正文</span>
+       <button class="btn fresh_nav_right_button btn-primary" >
+           <i class="icon-share icon-white" ></i>&nbsp;转发</button>
+    </div>
+</div>
+
+
+<div style="margin-top:55px" >
+  <label class="muted" >{{nickname}}</label>
+          {{body}}
+  <label class="muted text-right" >{{format-date created_at}}</label>
+  <table style="width:100%" >
+      <tr>
+          <td>
+              <button {{action 'dislikeTopic' id}} class="btn" >
+                  <i class="icon-thumbs-down" ></i> {{disliked_count}}</button>
+          </td>
+          <td align="center" >
+              <button class="btn" >
+                  <i class="icon-comment" ></i> {{replies_count}}</button>
+          </td>
+          <td align="right" > 
+              <button {{action 'likeTopic' id}} class="btn" >
+                  <i class="icon-thumbs-up" ></i> {{liked_count}}</button> 
+          </td>
+      </tr>
+    </table>
+</div>
+
+<table class="table table-hover" >
+  {{#each reply in replies}}
+    <tr>
+      <td>
+        <label class="muted" >{{reply.nickname}}</label>
+        {{reply.body}}
+        <label class="muted text-right" >{{format-date reply.created_at}}</label>
+      </td>
+    </tr>
+  {{/each}}
+</table>
+
+{{#if ismore}}
+<div align="center" >
+      <button {{action 'page'}} class="btn btn-primary" >&nbsp;点击加载更多&nbsp;</button>
+</div>
+{{/if}}
+
+{{#if isloading}}
+<div class="fresh_loading">
+<p>isloading ....</p>
+</div>
+{{/if}}
+
+</script>
+
+<!--创建帖子 template-->
+<script type="text/x-handlebars" id='createtopic'>
+
+<div id="fresh_nav" align="center" >
+
+    <div class="row-fluid" >
+        <a class="btn fresh_nav_left_button" href="javascript:history.back()" >&larr;返回</a>
+        <span class="fresh_nav_title" >发帖</span>
+        <button class="btn fresh_nav_right_button btn-inverse" {{action 'publish'}} > <i class="icon-edit icon-white" ></i>&nbsp;发送</button>
+    </div>
+
+</div>
+
+<div >
+    <p margin="center" style=" margin-top:55px;" >
+        this is createtopic edit by {{nickname}}</p>
+    <p margin="center" >{{textarea value=content}}</p>
+</div>
 
 </script>
 

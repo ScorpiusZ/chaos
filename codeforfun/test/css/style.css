@@ -25,9 +25,15 @@
 	background-image: url("../images/fresh_nav_background.png");
 }
 
-.fresh_nav_button {
+.fresh_nav_right_button {
 	margin-top: 10px;
 	float: right;
+	margin-right: 10px;
+}
+
+.fresh_nav_left_button {
+	margin-top: 10px;
+	float: left;
 	margin-right: 10px;
 }
 
@@ -35,4 +41,18 @@
 	margin-top: 10px;
 	color: #999999;
 	font-size: 15pt;
+}
+
+.fresh_loading {
+    position: fixed;
+    position: fixed;
+    width: 25%;
+    height: 25%;
+    top: 40%;
+    left: 40%;
+    padding: 10px;
+    background-color: #FFF;
+    border: 5px solid #CCC;
+    z-index: 200;
+    box-shadow: #000 0 2px 18px;
 }

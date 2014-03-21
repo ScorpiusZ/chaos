@@ -7,9 +7,11 @@ App.TopicController = Ember.ObjectController.extend({
     replies_count: 123,
     created_at: 123,
     replies:[],
-    ismore:false,
+    ismore:true,
+    isloading:false,
     actions:{
         page: function(){
+            this.set('isloading',true);
             var m=[];
             m=this.get('replies');
             var store=this.store;
@@ -31,8 +33,21 @@ App.TopicController = Ember.ObjectController.extend({
             var newone=store.getById('cachetopic',1);
             var newm=[];
             newm=App.Topic.getmorereply(m,newone);
-            console.log('model length= '+newm.length);
             this.set('replies',newm);
+        },
+        loaded:function(){
+            var cur_topic=this.store.getById('cachetopic',1);
+            var replies=this.get('replies');
+            console.log('TopicController actions loaded replies length='+replies.length+' loaded length = '+cur_topic.get('per')*cur_topic.get('page'));
+            if(replies.length<cur_topic.get('per')*cur_topic.get('page')) {
+                console.log('nomre');
+                this.set('ismore',false);
+            }
+            this.set('isloading',false);
+        },
+        loading:function(){
+            console.log('TopicController actions loading');
+            this.set('isloading',true);
         }
     }
 });
