@@ -13,9 +13,30 @@ Dir_comments='mimi/comment/'
 Dir_articles_bd='bdjie/article/*.json'
 Dir_comments_bd='bdjie/comment/'
 
+Dir_articles_bwmm='beiwomm/article/*.json'
+Dir_comments_bwmm='beiwomm/comment/'
+
 countswitch=True
 count=200
 node_id=4
+
+sql_ar_find="select id from topics where device_id="
+
+sql_ar_ins_bd="insert into\
+               topics(device_id,node_id,body,nickname,\
+               likes_count,unlikes_count,created_at,updated_at,member_id) \
+               values(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+
+sql_ar_ins="insert into \
+            topics(device_id,node_id,body,nickname,\
+            likes_count,unlikes_count,created_at,updated_at,title,member_id) \
+            values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+
+sql_co_ins="insert into\
+            replies(body,topic_id,nickname,\
+            created_at,updated_at,replyable_type,replyable_id,member_id) \
+            values(%s,%s,%s,%s,%s,%s,%s,%s)"
+
 
 #db=MySQLdb.connect(host='172.16.1.59',user='zjj',passwd='zjj',port=3306,db='adult_things_dev',charset='utf8')
 db=MySQLdb.connect(host='localhost',user='root',passwd='',port=3306,db='adult_shop',charset='utf8')
@@ -81,6 +102,61 @@ def update_dbj():
             print "count = %d"%(i)
             break
 
+def update_bwmm():
+    flist=glob.glob(Dir_articles_bwmm)
+    i=1
+    print "sum = %d"%(len(flist))
+    for jsonfile in flist:
+        print jsonfile
+        f=file(str(jsonfile))
+        content=f.read()
+        try:
+            content=eval(content,{'false': False, 'true': True, 'null': None})
+        except:
+            print "convert to dict error"
+            return
+        article_id=content['secretId']
+        topic_id=0
+        if TopicExist(article_id):
+            continue
+        else:
+            topic_id=bwmm_topic_ins(content)
+        if topic_id==0:
+            print "insert article_id:%d error"%article_id
+            continue
+        else:
+            i+=1
+            update_bwmm_comments(topic_id,article_id)
+            update_replycount(topic_id)
+        if countswitch and i==count:
+            print
+            print "count = %d"%(i)
+            break
+
+
+def update_bwmm_comments (topic_id,article_id):
+    files=Dir_comments_bwmm+str(article_id)+'_comment_*.json'
+    print "comments files :%s"%files
+    flist=glob.glob(files)
+    for jsonfile in flist:
+        f=file(str(jsonfile))
+        content=f.read()
+        try:
+            content=eval(content,{'false': False, 'true': True, 'null': None})
+        except:
+            print "convert to dict error"
+            return
+        replies=content['secretCommentLists']
+        for i in range(len(replies)):
+            reply=replies[i]
+            print "comments : %s  num: %d"%(jsonfile,i)
+            if reply:
+                bwmm_replies_ins(topic_id,reply)
+            else:
+                print "%s is null"%jsonfile
+                break
+
+
 def update_bdj_comments (topic_id,article_id):
     files=Dir_comments_bd+str(article_id)+'_comment_*.json'
     print "comments files :%s"%files
@@ -125,23 +201,7 @@ def update_mimi_comments(topic_id,article_id):
                 print "%s is null"%jsonfile
                 break
 
-sql_ar_find="select id from topics where device_id="
-
-sql_ar_ins_bd="insert into\
-               topics(device_id,node_id,body,nickname,\
-               likes_count,unlikes_count,created_at,updated_at,member_id) \
-               values(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-
-sql_ar_ins="insert into \
-            topics(device_id,node_id,body,nickname,\
-            likes_count,unlikes_count,created_at,updated_at,title,member_id) \
-            values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-
-sql_co_ins="insert into\
-            replies(body,topic_id,nickname,\
-            created_at,updated_at,replyable_type,replyable_id,member_id) \
-            values(%s,%s,%s,%s,%s,%s,%s,%s)"
-
+#db operation
 def mimi_topic_ins (topics):
     cursor=db.cursor()
     member_id=0
@@ -216,6 +276,26 @@ def bdj_replies_ins (topic_id,reply):
     db.commit()
     cursor.close()
 
+def bwmm_replies_ins (topic_id,reply):
+    cursor=db.cursor()
+    member_id=0
+    try:
+        body=reply['content'].decode('unicode_escape')
+        nickname=reply['userName'].decode('unicode_escape')
+        time=reply['commentTime']
+        gender=randrange(0,2)%2
+        member_id=getMemberId(nickname,gender)
+        if member_id != 0:
+            cursor.execute(sql_co_ins,[body,topic_id,nickname,time,time,'Topic',topic_id,member_id])
+        else:
+            return
+    except:
+        db.commit()
+        cursor.close()
+        return
+    db.commit()
+    cursor.close()
+
 def bdj_topic_ins (topics):
     cursor=db.cursor()
     member_id=0
@@ -246,6 +326,38 @@ def bdj_topic_ins (topics):
     db.commit()
     cursor.close()
     return ar_id
+
+def bwmm_topic_ins (topics):
+    cursor=db.cursor()
+    member_id=0
+    try:
+        device_id='simulator'+str(topics['secretId'])
+        body=topics['content'].decode('unicode_escape')
+        nickname=topics['authorDisplayName'].decode('unicode_escape')
+        likes_count=int(topics['likeNum'])
+        time=topics['createdAt']
+        unlikes_count=int(topics['unlikeNum'])
+        gender=0 if topics['gender']==1 else 1
+        member_id=getMemberId(nickname,gender)
+        if member_id != 0:
+            cursor.execute(sql_ar_ins_bd,[device_id,node_id,body,nickname,likes_count,unlikes_count,time,time,member_id])
+        else:
+            return 0
+    except:
+        cursor.close()
+        return 0
+    db.commit()
+    sql1=sql_ar_find+"'"+device_id+"'"
+    print sql1
+    count=cursor.execute(sql1)
+    ar_id=0
+    if count==1:
+        ar=cursor.fetchone()
+        ar_id=ar[0]
+    db.commit()
+    cursor.close()
+    return ar_id
+
 
 def getAvatar (num):
     url='http://image.yepcolor.com/v2/public-avatars/'
@@ -374,6 +486,10 @@ def main ():
     update_dbj()
     print
     print "bd is done "
+    print
+    update_bwmm()
+    print
+    print "bwmm is done "
     print
     deleteWrongDate()
     db.close()

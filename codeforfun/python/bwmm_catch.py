@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 #ecoding=utf-8
 import requests
-import urllib2
+import md5
 import json
 import time
 import sys
@@ -13,71 +13,73 @@ topic_payload={
         "orderedBy":-1,
         "pageNum":1,
         "pageSize":10,
-        "apiCode":209,
+        "apiCode":"209",
         "appName":"BWMM",
         "systemVersion":"4.3",
         "band":"samsung SCH-I679",
-        "secretKey":"cc54e2f58b3eb6b8c0f8f5ec44262c10",
+        "secretKey":"414e7251ab25f05b6a65e507010cdf37",
         "sessionToken":"",
         "systemName":"Android",
-        "appVersionCode":"1997",
-        "timestamp":"1399974977932",
-        }
+        "appVersionCode":1997,
+        "timestamp":1400038335268}
 
 comment_payload={
-        "market":"anzhuo" ,
-        "from":"android" ,
-        "ver":"2.4.5" ,
-        "udid":"000000000000000" ,
-        "latlng":"" ,
-        "lang":"CN" ,
-        "appName":"budejie_mimi" ,
-        "mac":"08%3A00%3A27%3A81%3A2d%3A79" ,
-        "c":"comment" ,
-        "a":"dataList" ,
-        "per":20 ,
-        "data_id":"103915951" ,
-        "page":1 ,
-        "userID":"" ,
-        "hot":1 }
+        "secretId":150699,
+        "pageNum":1,
+        "pageSize":10,
+        "orderedBy":-1,
+        "apiCode":"211",
+        "appName":"BWMM",
+        "systemVersion":"4.3",
+        "band":"samsung SCH-I679",
+        "secretKey":"1f1281a840fe7b262d342f232994b628",
+        "sessionToken":"",
+        "systemName":"Android",
+        "appVersionCode":1997,
+        "timestamp":1400039026499}
 
+headers={'Content-type':'application/json'
+        ,'User-Agent':'android-async-http/1.4.4 (http://loopj.com/android-async-http)' }
+
+current_mili_time=lambda:int(round(time.time()*1000))
 
 def getArticle (sorts,per,page):
-    #topic_payload["order"]=sorts
-    #topic_payload["per"]=per
-    #topic_payload["page"]=page
-    headers={'Content-type':'application/json','Accept':'text/plain'}
-    r=requests.post(url,data=topic_payload,timeout=5,headers=headers)
+    topic_payload["orderedBy"]=sorts
+    topic_payload["pageSize"]=per
+    topic_payload["pageNum"]=page
+    topic_payload['timestamp']=current_mili_time()
+    topic_payload['secretKey']=getSecretKey(topic_payload['apiCode'],topic_payload['timestamp'],topic_payload['appVersionCode'])
+    r=requests.post(url,data=json.dumps(topic_payload),timeout=5,headers=headers)
     print
     print "getArticle :  page = %d"%(page)
     print
-    res=r.text
-    print res
-    #lists=res['list']
-    #for i in range(len(lists)):
-        #article=lists[i]
-        #filename="beiwomm/article/"+"article"+str(article['id'])+".json"
-        #fd=open(filename,'w')
-        #fd.writelines(json.dumps(article))
-        #fd.close()
-        #print
-        #print article['text']
-        #print
-        #getComments(article['id'],20,1,int(article['comment']))
-    #return
+    res=r.json()
+    lists=res['secretLists']
+    #print lists
+    for i in range(len(lists)):
+        article=lists[i]
+        filename="beiwomm/article/"+"article"+str(article['secretId'])+".json"
+        fd=open(filename,'w')
+        fd.writelines(json.dumps(article))
+        fd.close()
+        print
+        print article['content']
+        print
+        getComments(article['secretId'],20,1,int(article['commentNum']))
+        break
+    return
 
 def getComments (article_id,per,page,count):
-    comment_payload['data_id']=article_id
-    comment_payload['per']=per
-    comment_payload['page']=page
-    try:
-        r=requests.get(url,params=comment_payload,timeout=5)
-        print "getComments : article_id = %d page = %d count = %d"%(article_id,page,count)
-    except:
-        return
-    print r.url
+    comment_payload["secretId"]=article_id
+    comment_payload["pageSize"]=per
+    comment_payload["pageNum"]=page
+    comment_payload['timestamp']=current_mili_time()
+    comment_payload['secretKey']=getSecretKey(comment_payload['apiCode'],comment_payload['timestamp'],comment_payload['appVersionCode'])
+    r=requests.post(url,data=json.dumps(comment_payload),timeout=5,headers=headers)
+    print "getComments : article_id = %d page = %d count = %d"%(article_id,page,count)
     res=r.json()
-    lists=res['data']
+    #print res
+    lists=res['secretCommentLists']
     if len(lists)==0:
         return
     filename="beiwomm/comment"+"/"+str(article_id)+"_comment_"+str(page)+".json"
@@ -95,15 +97,19 @@ def getComments (article_id,per,page,count):
         page+=1
         getComments(article_id,per,page,count)
 
-sorts={'hot':'comment',
-        'timewarp':'timewarp',
-        'normal':''}
+sorts={
+       'default':-1,
+       'day':1,
+       'week':2,
+       'month':3,
+       'new':4,
+       }
 
 
 def main ():
     if len(sys.argv)>=4:
         category=sys.argv[1]
-        if category not in('hot','timewarp','normal'):
+        if category not in('default','day','week','month','new'):
             print "category should be like hot or timewarp or normal"
             return
         else:
@@ -117,16 +123,17 @@ def main ():
         print "example bdj_catch.py hot 10 20 will download 200 hot topics"
         return
     page=1
-    while page<count:
-        getArticle(category,per,page)
+    while page<=count:
+        getArticle(category,per,page+1)
         page+=1;
+
+def getSecretKey (apicode,time,appVersionCode):
+    seed=str(apicode)+str(appVersionCode)+str(time)+"abcde12345$$%#%##@989KdMobi168"
+    byte_seed="".join([elem.encode("utf-8")for elem in seed])
+    m=md5.new()
+    m.update(byte_seed)
+    return m.hexdigest()
 
 
 if __name__ == '__main__':
-    time={ "1399975086704":"d549f23518f2c58a501a787face1084b",
-            "1399975117978":"1592a31a0c1a018e6b0a8f336ddec851",
-            "1399975123972":"f9a9a107204247b11a7caa50cba923b1",
-            "1399975123975":"2ebcfb18b5e3375b9c1d489df61aafd6"}
-    #getArticle('a',1,1)
-    for i in time.keys():
-        print "time %s code %s md5 %s"%(i,time[i],)
+    main()
