@@ -110,7 +110,7 @@ def main ():
     if len(sys.argv)>=4:
         category=sys.argv[1]
         if category not in('default','day','week','month','new'):
-            print "category should be like hot or timewarp or normal"
+            print "category should be like default or day or week or month or new"
             return
         else:
             category=sorts[category]
@@ -118,7 +118,7 @@ def main ():
         count=int(sys.argv[3])
         print "category=%s per=%d page=%d"%(category,per,count)
     else:
-        print "usage:: %s category[hot|timewarp|normal] per count "%sys.argv[0]
+        print "usage:: %s category[default|day|week|month|new] per count "%sys.argv[0]
         print "then this script will download per*count topics"
         print "example bdj_catch.py hot 10 20 will download 200 hot topics"
         return

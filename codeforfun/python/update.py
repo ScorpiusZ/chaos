@@ -56,7 +56,7 @@ def update_mimi():
             continue
         article_id=content['id']
         #do not insert same topics
-        if TopicExist(article_id):
+        if TopicExist(article_id,'mimi'):
             continue
         else:
             topic_id=mimi_topic_ins(content)
@@ -86,12 +86,12 @@ def update_dbj():
             return
         article_id=content['id']
         #do not insert same topics
-        if TopicExist(article_id):
+        if TopicExist(article_id,'bdj'):
             continue
         else:
             topic_id=bdj_topic_ins(content)
         if topic_id==0:
-            print "insert article_id:%d error"%article_id
+            print "insert article_id:%s error"%str(article_id)
             continue
         else:
             i+=1
@@ -117,7 +117,7 @@ def update_bwmm():
             return
         article_id=content['secretId']
         topic_id=0
-        if TopicExist(article_id):
+        if TopicExist(article_id,'bwmm'):
             continue
         else:
             topic_id=bwmm_topic_ins(content)
@@ -206,7 +206,8 @@ def mimi_topic_ins (topics):
     cursor=db.cursor()
     member_id=0
     try:
-        device_id='simulator'+str(topics['id'])
+        device_id='simulator'+'mimi'+str(topics['id'])
+        #device_id='simulator'+str(topics['id'])
         title=topics['title'].decode('unicode_escape')
         body=topics['content'].decode('unicode_escape')
         nickname=topics['login'].decode('unicode_escape')
@@ -300,7 +301,8 @@ def bdj_topic_ins (topics):
     cursor=db.cursor()
     member_id=0
     try:
-        device_id='simulator'+str(topics['id'])
+        device_id='simulator'+'bdj'+str(topics['id'])
+        #device_id='simulator'+str(topics['id'])
         body=topics['text'].decode('unicode_escape')
         nickname=topics['username'].decode('unicode_escape')
         likes_count=int(topics['love'])
@@ -331,7 +333,8 @@ def bwmm_topic_ins (topics):
     cursor=db.cursor()
     member_id=0
     try:
-        device_id='simulator'+str(topics['secretId'])
+        device_id='simulator'+'bwmm'+str(topics['secretId'])
+        #device_id='simulator'+str(topics['secretId'])
         body=topics['content'].decode('unicode_escape')
         nickname=topics['authorDisplayName'].decode('unicode_escape')
         likes_count=int(topics['likeNum'])
@@ -426,12 +429,18 @@ def getReplyCount (topic_id):
     result=cursor.fetchone()
     return result[0]
 
-def TopicExist (topic_id):
+def TopicExist (topic_id,Type):
     cursor=db.cursor()
-    topic_id='simulator'+str(topic_id)
-    sql="select * from topics where device_id ='%s'"%str(topic_id)
+    device_id='simulator'+str(Type)+str(topic_id)
+    sql="select * from topics where device_id ='%s'"%str(device_id)
     count=cursor.execute(sql)
-    if count==1:
+    device_id='simulator'+str(topic_id)
+    sql_old="select * from topics where device_id ='%s'"%str(device_id)
+    count_old=cursor.execute(sql_old)
+    #print "sql %s "%sql
+    #print "sql_old %s "%sql_old
+    #print "TopicExist :: count_old = %d count = %d"%(count,count_old)
+    if count==1 or count_old==1:
         return True
     else:
         return False
