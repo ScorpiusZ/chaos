@@ -21,6 +21,22 @@ elif [ "$1" == "push" ]; then
     git add -A
     git commit -a
     git push origin master
+elif [ "$1" == "status" ]; then
+    cd ~/.vim
+    echo 
+    echo "~/.vim   ::"
+    echo 
+    git status
+    echo 
+    echo "~/.myrc   ::"
+    echo 
+    cd ~/.myrc
+    git status
+    echo 
+    echo "~/Documents/githubs/chaos     ::"
+    echo 
+    cd ~/Documents/githubs/chaos
+    git status
 else
     echo " options [pull|push] "
     echo "pull : pull everything from master"
