@@ -3,8 +3,8 @@ import requests
 from bs4 import BeautifulSoup
 
 account={
-        "username":"520095417@qq.com",
-        "password":"z4326959"
+        "username":"",
+        "password":""
         }
 
 
