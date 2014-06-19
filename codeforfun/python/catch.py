@@ -23,14 +23,14 @@ def push2Db(data):
         return
     cursor=db.cursor()
     sql='insert into\
-        contents(user_avatar,user_name,text,image,width,height,likes_count,unlikes_count,\
-        source_id,updated_at,created_at)\
-        values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+        contents(user_avatar,user_name,text,image,width,height,forward_count,\
+        likes_count,unlikes_count,source_id,updated_at,created_at)\
+        values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
     try:
         cursor.execute(sql,
                 [data['avatar'], data['name'],
                 data['text'],data['image'] ,data['width']
-                ,data['height'] ,data['likes_count']
+                ,data['height'] ,data['forward'],data['likes_count']
                 ,data['unlikes_count'],data['source_id']
                 ,data['updated_at'] ,data['created_at']])
         db.commit()
@@ -50,6 +50,7 @@ def parseData(item,channel):
             data['image']=item['cdn_img']
             data['width']=item['width']
             data['height']=item['height']
+            data['forward']=item['forward']
             data['likes_count'] =int(item['love'])
             data['unlikes_count']=int(item['hate'])
             data['updated_at']=item['create_time']
