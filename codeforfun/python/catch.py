@@ -150,9 +150,9 @@ def main():
         elif app=='neihan':
             neihan_catch(count)
         else:
-            pass
+            print "usage  %s [bdjie|neihan] count "%sys.argv[0]
     else:
-        print "usage:: %s [bdjie] count "%sys.argv[0]
+        print "usage  %s [bdjie|neihan] count "%sys.argv[0]
         return
 
 if __name__ == '__main__':
