@@ -49,35 +49,35 @@ def formatId(id):
 
 def parseData(item,channel):
     data={}
-    #try:
-    if channel=='bdjie':
-        data['avatar']=item['profile_image']
-        data['name']=item['screen_name']
-        data['text']=item['text']
-        data['image']=item['cdn_img']
-        data['width']=item['width']
-        data['height']=item['height']
-        data['forward']=item['forward']
-        data['likes_count'] =int(item['love'])
-        data['unlikes_count']=int(item['hate'])
-        data['updated_at']=item['create_time']
-        data['created_at']=item['create_time']
-        data['source_id']=int(item['id'])
-    elif channel=='neihan':
-        data['avatar']=item['group']['user']['avatar_url']
-        data['name']=item['group']['user']['name']
-        data['text']=item['group']['content']
-        data['image']=item['group']['large_image']['url_list'][0]['url']
-        data['width']=item['group']['large_image']['width']
-        data['height']=item['group']['large_image']['height']
-        data['forward']=item['group']['repin_count']
-        data['likes_count'] =item['group']['favorite_count']
-        data['unlikes_count']=item['group']['bury_count']
-        data['updated_at']=datetime.datetime.fromtimestamp(int(item['online_time'])).strftime('%Y-%m-%d %H:%M:%S')
-        data['created_at']=datetime.datetime.fromtimestamp(int(item['online_time'])).strftime('%Y-%m-%d %H:%M:%S')
-        data['source_id']=formatId(item['group']['group_id'])
-    #except:
-        #return
+    try:
+        if channel=='bdjie':
+            data['avatar']=item['profile_image']
+            data['name']=item['screen_name']
+            data['text']=item['text']
+            data['image']=item['cdn_img']
+            data['width']=item['width']
+            data['height']=item['height']
+            data['forward']=item['forward']
+            data['likes_count'] =int(item['love'])
+            data['unlikes_count']=int(item['hate'])
+            data['updated_at']=item['create_time']
+            data['created_at']=item['create_time']
+            data['source_id']=int(item['id'])
+        elif channel=='neihan':
+            data['avatar']=item['group']['user']['avatar_url']
+            data['name']=item['group']['user']['name']
+            data['text']=item['group']['content']
+            data['image']=item['group']['large_image']['url_list'][0]['url']
+            data['width']=item['group']['large_image']['width']
+            data['height']=item['group']['large_image']['height']
+            data['forward']=item['group']['repin_count']
+            data['likes_count'] =item['group']['favorite_count']
+            data['unlikes_count']=item['group']['bury_count']
+            data['updated_at']=datetime.datetime.fromtimestamp(int(item['online_time'])).strftime('%Y-%m-%d %H:%M:%S')
+            data['created_at']=datetime.datetime.fromtimestamp(int(item['online_time'])).strftime('%Y-%m-%d %H:%M:%S')
+            data['source_id']=formatId(item['group']['group_id'])
+    except:
+        return
     return data
 
 def neihan_catch(count):
