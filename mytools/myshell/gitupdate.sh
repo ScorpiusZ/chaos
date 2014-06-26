@@ -3,11 +3,11 @@
 
 if [ "$1" == "pull" ]; then
     cd ~/.vim
-    git pull origin master
+    git pull --ff-only origin master
     cd ~/.myrc
-    git pull origin master
+    git pull --ff-only origin master
     cd ~/Documents/githubs/chaos
-    git pull origin master
+    git pull --ff-only origin master
 elif [ "$1" == "push" ]; then
     cd ~/.vim
     git add -A
