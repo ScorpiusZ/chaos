@@ -47,6 +47,13 @@ def formatId(id):
         id=int(id)%1000000000
     return id
 
+def convert_count(count):
+    if not count:
+        return 0
+    else:
+        count=int(count)
+        return count%50
+
 def parseData(item,channel):
     data={}
     try:
@@ -57,9 +64,9 @@ def parseData(item,channel):
             data['image']=item['cdn_img']
             data['width']=item['width']
             data['height']=item['height']
-            data['forward']=item['forward']
-            data['likes_count'] =int(item['love'])
-            data['unlikes_count']=int(item['hate'])
+            data['forward']=convert_count(item['forward'])
+            data['likes_count'] =convert_count(int(item['love']))
+            data['unlikes_count']=convert_count(int(item['hate']))
             data['updated_at']=item['create_time']
             data['created_at']=item['create_time']
             data['source_id']=int(item['id'])
@@ -70,9 +77,9 @@ def parseData(item,channel):
             data['image']=item['group']['large_image']['url_list'][0]['url']
             data['width']=item['group']['large_image']['width']
             data['height']=item['group']['large_image']['height']
-            data['forward']=item['group']['repin_count']
-            data['likes_count'] =item['group']['favorite_count']
-            data['unlikes_count']=item['group']['bury_count']
+            data['forward']=convert_count(item['group']['repin_count'])
+            data['likes_count'] =convert_count(item['group']['favorite_count'])
+            data['unlikes_count']=convert_count(item['group']['bury_count'])
             data['updated_at']=datetime.datetime.fromtimestamp(int(item['online_time'])).strftime('%Y-%m-%d %H:%M:%S')
             data['created_at']=datetime.datetime.fromtimestamp(int(item['online_time'])).strftime('%Y-%m-%d %H:%M:%S')
             data['source_id']=formatId(item['group']['group_id'])
@@ -83,10 +90,10 @@ def parseData(item,channel):
             data['image']=item['pictures']
             data['width']=item['width']
             data['height']=item['height']
-            data['forward']=item['reward_count']
-            data['likes_count'] =item['pos']
+            data['forward']=convert_count(item['reward_count'])
+            data['likes_count'] =convert_count(item['pos'])
             unlike=int(item['neg'])
-            data['unlikes_count']=-unlike
+            data['unlikes_count']=convert_count(-unlike)
             data['updated_at']=item['created_at']
             data['created_at']=item['created_at']
             data['source_id']=item['id']
