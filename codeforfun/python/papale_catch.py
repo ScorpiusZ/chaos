@@ -106,7 +106,6 @@ def baozou_catch(count,fileter):
         return
     if fileter:
         url=url%fileter
-        print url
     count=int(count)
     while count:
         params['page']=count
@@ -237,9 +236,9 @@ def main():
             if category:
                 baozou_catch(count,category)
         else:
-            print "usage  %s app[bdjie|neihan] category[] count "%sys.argv[0]
+            print "usage  %s app[bdjie|neihan|baozou] category[] count "%sys.argv[0]
     else:
-        print "usage  %s app[bdjie|neihan] category count "%sys.argv[0]
+        print "usage  %s app[bdjie|neihan|baozou] category count "%sys.argv[0]
         return
 
 if __name__ == '__main__':
