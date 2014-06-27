@@ -36,51 +36,51 @@ def push2Db(data):
                 ,data['updated_at'] ,data['created_at']])
         db.commit()
         cursor.close()
+        print '%s ok'%data['source_id']
     except:
-        print 'error'
+        print '%s error'%data['source_id']
         cursor.close()
         return
 
 def formatId(id):
     if id>999999999:
         id=int(id)%1000000000
-        print 'id = %d'%id
     return id
 
 def parseData(item,channel):
     data={}
-    try:
-        if channel=='bdjie':
-            data['avatar']=item['profile_image']
-            data['name']=item['screen_name']
-            data['text']=item['text']
-            data['image']=item['cdn_img']
-            data['width']=item['width']
-            data['height']=item['height']
-            data['forward']=item['forward']
-            data['likes_count'] =int(item['love'])
-            data['unlikes_count']=int(item['hate'])
-            data['updated_at']=item['create_time']
-            data['created_at']=item['create_time']
-            data['source_id']=int(item['id'])
-        elif channel=='neihan':
-            data['avatar']=item['group']['user']['avatar_url']
-            data['name']=item['group']['user']['name']
-            data['text']=item['group']['content']
-            data['image']=item['group']['large_image']['url_list'][0]['url']
-            data['width']=item['group']['large_image']['width']
-            data['height']=item['group']['large_image']['height']
-            data['forward']=item['group']['repin_count']
-            data['likes_count'] =item['group']['favorite_count']
-            data['unlikes_count']=item['group']['bury_count']
-            data['updated_at']=datetime.datetime.fromtimestamp(int(item['online_time'])).strftime('%Y-%m-%d %H:%M:%S')
-            data['created_at']=datetime.datetime.fromtimestamp(int(item['online_time'])).strftime('%Y-%m-%d %H:%M:%S')
-            data['source_id']=formatId(item['group']['group_id'])
-    except:
-        return
+    #try:
+    if channel=='bdjie':
+        data['avatar']=item['profile_image']
+        data['name']=item['screen_name']
+        data['text']=item['text']
+        data['image']=item['cdn_img']
+        data['width']=item['width']
+        data['height']=item['height']
+        data['forward']=item['forward']
+        data['likes_count'] =int(item['love'])
+        data['unlikes_count']=int(item['hate'])
+        data['updated_at']=item['create_time']
+        data['created_at']=item['create_time']
+        data['source_id']=int(item['id'])
+    elif channel=='neihan':
+        data['avatar']=item['group']['user']['avatar_url']
+        data['name']=item['group']['user']['name']
+        data['text']=item['group']['content']
+        data['image']=item['group']['large_image']['url_list'][0]['url']
+        data['width']=item['group']['large_image']['width']
+        data['height']=item['group']['large_image']['height']
+        data['forward']=item['group']['repin_count']
+        data['likes_count'] =item['group']['favorite_count']
+        data['unlikes_count']=item['group']['bury_count']
+        data['updated_at']=datetime.datetime.fromtimestamp(int(item['online_time'])).strftime('%Y-%m-%d %H:%M:%S')
+        data['created_at']=datetime.datetime.fromtimestamp(int(item['online_time'])).strftime('%Y-%m-%d %H:%M:%S')
+        data['source_id']=formatId(item['group']['group_id'])
+    #except:
+        #return
     return data
 
-def neihan_catch(count):
+def neihan_catch(count,fileter):
     params={'category_id':2,
             'level':3,
             'count':30,
@@ -101,21 +101,25 @@ def neihan_catch(count):
     if not count:
         return
     count=int(count)
+    if fileter:
+        params['level']=fileter
+    print params
     while count:
         url = 'http://ic.snssdk.com/2/essay/zone/category/data/'
         params['max_time']=max_time
         r=requests.get(url,params=params,timeout=5)
         content=r.json()['data']
         dataList=content['data']
+        if not len(dataList):
+            break
         for item in dataList:
             data=parseData(item,'neihan')
-            print data
             push2Db(data)
         max_time=content['max_time']
         count-=1
 
 
-def bdj_catch(count):
+def bdj_catch(count,fileter):
     params={
             'a':"newlist",
             'c':"data",
@@ -125,6 +129,9 @@ def bdj_catch(count):
             'ver':"3.8.3"}
     if not count :
         return
+    if fileter:
+        params['a']=fileter
+    print params
     count=int(count)
     while count:
         url="http://api.budejie.com/api/api_open.php"
@@ -135,24 +142,47 @@ def bdj_catch(count):
         print
         print 'length = %d'%len(dataList)
         print
+        if not len(dataList):
+            break
         for item in dataList:
             data=parseData(item,'bdjie')
             push2Db(data)
         count-=1
 
+def dealWithFilter(app,category):
+    if app=='bdjie':
+        if category not in {'distillate','new'}:
+            print'%s\'s category should be like distillate[精华] or new'%app
+        else:
+            return 'list'if category=='distillate'else 'newlist'
+    elif app=='neihan':
+        if category not in {'distillate','new','hot','recommand'}:
+            print'%s\'s category should be like distillate[精华] or new or hot or recommand'%app
+        else:
+            fileter={ 'distillate':5, 'new':3,
+                    'hot':4,'recommand':6 }
+            return fileter[category]
+    else:
+        pass
 
 def main():
-    if len(sys.argv)==3:
+    if len(sys.argv)==4:
         app=sys.argv[1]
-        count=sys.argv[2]
+        category=sys.argv[2]
+        count=sys.argv[3]
         if app=='bdjie':
-            bdj_catch(count)
+            category=dealWithFilter('bdjie',category)
+            if category:
+                bdj_catch(count,category)
         elif app=='neihan':
-            neihan_catch(count)
+            category=dealWithFilter('neihan',category)
+            print category
+            if category:
+                neihan_catch(count,category)
         else:
-            print "usage  %s [bdjie|neihan] count "%sys.argv[0]
+            print "usage  %s app[bdjie|neihan] category[] count "%sys.argv[0]
     else:
-        print "usage  %s [bdjie|neihan] count "%sys.argv[0]
+        print "usage  %s app[bdjie|neihan] category count "%sys.argv[0]
         return
 
 if __name__ == '__main__':
