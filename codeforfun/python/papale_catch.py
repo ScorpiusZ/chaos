@@ -8,8 +8,6 @@ import sys
 db=MySQLdb.connect(host='localhost',user='root',passwd='',port=3306,db='test',charset='utf8')
 
 def Exist(data):
-    if not data:
-        return False
     sql='select * from contents where source_id=%s'%data['source_id']
     cursor=db.cursor()
     count=cursor.execute(sql)
@@ -19,6 +17,8 @@ def Exist(data):
         return False
 
 def push2Db(data):
+    if not data:
+        return
     if Exist(data):
         print '%s Exist'%data['source_id']
         return
@@ -49,36 +49,80 @@ def formatId(id):
 
 def parseData(item,channel):
     data={}
-    #try:
-    if channel=='bdjie':
-        data['avatar']=item['profile_image']
-        data['name']=item['screen_name']
-        data['text']=item['text']
-        data['image']=item['cdn_img']
-        data['width']=item['width']
-        data['height']=item['height']
-        data['forward']=item['forward']
-        data['likes_count'] =int(item['love'])
-        data['unlikes_count']=int(item['hate'])
-        data['updated_at']=item['create_time']
-        data['created_at']=item['create_time']
-        data['source_id']=int(item['id'])
-    elif channel=='neihan':
-        data['avatar']=item['group']['user']['avatar_url']
-        data['name']=item['group']['user']['name']
-        data['text']=item['group']['content']
-        data['image']=item['group']['large_image']['url_list'][0]['url']
-        data['width']=item['group']['large_image']['width']
-        data['height']=item['group']['large_image']['height']
-        data['forward']=item['group']['repin_count']
-        data['likes_count'] =item['group']['favorite_count']
-        data['unlikes_count']=item['group']['bury_count']
-        data['updated_at']=datetime.datetime.fromtimestamp(int(item['online_time'])).strftime('%Y-%m-%d %H:%M:%S')
-        data['created_at']=datetime.datetime.fromtimestamp(int(item['online_time'])).strftime('%Y-%m-%d %H:%M:%S')
-        data['source_id']=formatId(item['group']['group_id'])
-    #except:
-        #return
+    try:
+        if channel=='bdjie':
+            data['avatar']=item['profile_image']
+            data['name']=item['screen_name']
+            data['text']=item['text']
+            data['image']=item['cdn_img']
+            data['width']=item['width']
+            data['height']=item['height']
+            data['forward']=item['forward']
+            data['likes_count'] =int(item['love'])
+            data['unlikes_count']=int(item['hate'])
+            data['updated_at']=item['create_time']
+            data['created_at']=item['create_time']
+            data['source_id']=int(item['id'])
+        elif channel=='neihan':
+            data['avatar']=item['group']['user']['avatar_url']
+            data['name']=item['group']['user']['name']
+            data['text']=item['group']['content']
+            data['image']=item['group']['large_image']['url_list'][0]['url']
+            data['width']=item['group']['large_image']['width']
+            data['height']=item['group']['large_image']['height']
+            data['forward']=item['group']['repin_count']
+            data['likes_count'] =item['group']['favorite_count']
+            data['unlikes_count']=item['group']['bury_count']
+            data['updated_at']=datetime.datetime.fromtimestamp(int(item['online_time'])).strftime('%Y-%m-%d %H:%M:%S')
+            data['created_at']=datetime.datetime.fromtimestamp(int(item['online_time'])).strftime('%Y-%m-%d %H:%M:%S')
+            data['source_id']=formatId(item['group']['group_id'])
+        elif channel=='baozou':
+            data['avatar']=item['user_avatar']
+            data['name']=item['user_login']
+            data['text']=item['title']
+            data['image']=item['pictures']
+            data['width']=item['width']
+            data['height']=item['height']
+            data['forward']=item['reward_count']
+            data['likes_count'] =item['pos']
+            unlike=int(item['neg'])
+            data['unlikes_count']=-unlike
+            data['updated_at']=item['created_at']
+            data['created_at']=item['created_at']
+            data['source_id']=item['id']
+    except:
+        return
     return data
+
+def baozou_catch(count,fileter):
+    url='http://api.ibaozou.com/groups/1/hottest/%s.app?'
+    params={
+    'client_id':10230158,
+    'ignore_for_mobile':'true',
+    'page':1,
+    'pagesize':10
+    }
+    if not count:
+        return
+    if fileter:
+        url=url%fileter
+        print url
+    count=int(count)
+    while count:
+        params['page']=count
+        try:
+            response=requests.get(url,params=params,timeout=5)
+        except:
+            print 'requests timeout'
+            continue
+        content=response.json()
+        dataList=content['articles']
+        if not len(dataList):
+            break
+        for item in dataList:
+            data=parseData(item,'baozou')
+            push2Db(data)
+        count-=1
 
 def neihan_catch(count,fileter):
     params={'category_id':2,
@@ -106,8 +150,12 @@ def neihan_catch(count,fileter):
     while count:
         url = 'http://ic.snssdk.com/2/essay/zone/category/data/'
         params['max_time']=max_time
-        r=requests.get(url,params=params,timeout=5)
-        content=r.json()['data']
+        try:
+            response=requests.get(url,params=params,timeout=5)
+        except:
+            print 'requests timeout'
+            continue
+        content=response.json()['data']
         dataList=content['data']
         if not len(dataList):
             break
@@ -134,7 +182,11 @@ def bdj_catch(count,fileter):
     while count:
         url="http://api.budejie.com/api/api_open.php"
         params['page']=count
-        response=requests.get(url,params=params,timeout=5)
+        try:
+            response=requests.get(url,params=params,timeout=5)
+        except:
+            print 'requests timeout'
+            continue
         content=response.json()
         dataList=content['list']
         if not len(dataList):
@@ -157,6 +209,13 @@ def dealWithFilter(app,category):
             fileter={ 'distillate':5, 'new':3,
                     'hot':4,'recommand':6 }
             return fileter[category]
+    elif app=='baozou':
+        if category not in {'day','week','month','year','8hr'}:
+            print'%s\'s category should be like day or week or month or year or 8hr'%app
+        else:
+            fileter={ 'day':'24hr', 'week':'week',
+                    'month':'month','year':'year','8hr':'8hr' }
+            return fileter[category]
     else:
         pass
 
@@ -173,6 +232,10 @@ def main():
             category=dealWithFilter('neihan',category)
             if category:
                 neihan_catch(count,category)
+        elif app=='baozou':
+            category=dealWithFilter('baozou',category)
+            if category:
+                baozou_catch(count,category)
         else:
             print "usage  %s app[bdjie|neihan] category[] count "%sys.argv[0]
     else:
