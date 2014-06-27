@@ -38,7 +38,8 @@ elif [ "$1" == "status" ]; then
     cd ~/Documents/githubs/chaos
     git status
 else
-    echo " options [pull|push] "
+    echo " options [pull|push|status] "
     echo "pull : pull everything from master"
     echo "push : push everything from master"
+    echo "status : show current status"
 fi
