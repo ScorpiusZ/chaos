@@ -103,7 +103,6 @@ def neihan_catch(count,fileter):
     count=int(count)
     if fileter:
         params['level']=fileter
-    print params
     while count:
         url = 'http://ic.snssdk.com/2/essay/zone/category/data/'
         params['max_time']=max_time
@@ -131,7 +130,6 @@ def bdj_catch(count,fileter):
         return
     if fileter:
         params['a']=fileter
-    print params
     count=int(count)
     while count:
         url="http://api.budejie.com/api/api_open.php"
@@ -139,9 +137,6 @@ def bdj_catch(count,fileter):
         response=requests.get(url,params=params,timeout=5)
         content=response.json()
         dataList=content['list']
-        print
-        print 'length = %d'%len(dataList)
-        print
         if not len(dataList):
             break
         for item in dataList:
@@ -176,7 +171,6 @@ def main():
                 bdj_catch(count,category)
         elif app=='neihan':
             category=dealWithFilter('neihan',category)
-            print category
             if category:
                 neihan_catch(count,category)
         else:
