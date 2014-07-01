@@ -5,7 +5,7 @@ import MySQLdb
 import datetime
 import sys
 
-db=MySQLdb.connect(host='localhost',user='root',passwd='',port=3306,db='test',charset='utf8')
+#db=MySQLdb.connect(host='localhost',user='root',passwd='',port=3306,db='test',charset='utf8')
 
 def Exist(data):
     sql='select * from contents where source_id=%s'%data['source_id']
@@ -99,7 +99,12 @@ def parseData(item,channel):
             data['source_id']=item['id']
     except:
         return
+    data['text']=fileter_text(data['text'])
     return data
+
+def fileter_text(text):
+    text=str(text)
+    return text.replace('不得姐','啪啪')
 
 def baozou_catch(count,fileter):
     url='http://api.ibaozou.com/groups/1/hottest/%s.app?'
