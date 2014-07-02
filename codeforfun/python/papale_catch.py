@@ -5,7 +5,9 @@ import MySQLdb
 import datetime
 import sys
 
-#db=MySQLdb.connect(host='localhost',user='root',passwd='',port=3306,db='test',charset='utf8')
+reload(sys)
+sys.setdefaultencoding('utf-8')
+db=MySQLdb.connect(host='localhost',user='root',passwd='',port=3306,db='test',charset='utf8')
 
 def Exist(data):
     sql='select * from contents where source_id=%s'%data['source_id']
