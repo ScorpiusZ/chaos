@@ -5,6 +5,14 @@ import re
 
 
 def getHtml(date):
+    data_result={
+            '爱恋吧':0,
+            '匿爱':0,
+            '风月同城':0,
+            '影缘遇上你':0,
+            '缘来一线':0,
+            '爱看美视频':0,
+            }
     url='http://e.qq.com/ec/api.php?mod=report&act=campaign&g_tk=782042133&d_p=0.4388993347529322&callback=frameElement.callback&script&g_tk=782042133'
     headers={
         'Content-Type':'application/x-www-form-urlencoded',
@@ -19,7 +27,17 @@ def getHtml(date):
     result=eval(result)
     advs=result['data']['list']
     for adv in advs:
-        print ' 名称  : {0}   花费 : {1} '.format(adv['campaignname'],adv['cost'])
+        name=adv['campaignname']
+        cost=adv['cost']
+        print ' 名称  : {0}   花费 : {1} '.format(name,cost)
+        for app_name in data_result.keys():
+            if app_name in name and cost!='-':
+                data_result[app_name]=data_result[app_name]+cost
+
+    print '总计'
+    for app_name in data_result.keys():
+        print ' 名称 {0}  总花费 {1}'.format(app_name,data_result[app_name])
+
 
 dates={
     '2014-09-01',
