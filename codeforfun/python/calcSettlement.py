@@ -9,7 +9,7 @@ def getHtml(date):
     url='http://e.qq.com/ec/api.php?mod=report&act=campaign&g_tk=1007011877&d_p=0.9904019145760685&callback=frameElement.callback&script&g_tk=1007011877'
     headers={
         'Content-Type':'application/x-www-form-urlencoded',
-        'Cookie':' gdt_cm_tag=506de8314d5c8379-19208565-46ec-8d49-189601ab147cedbfc4b83d3; o_cookie=520095417; pgv_pvid=576081791; pgv_info=ssid=s4797060240; RK=Tf07quaQnd; pgv_pvi=5391354880; pgv_si=s1404079104; firsttime=0; zzpaneluin=; zzpanelkey=; verifysession=h028Zd0AxM4yqC592Y9H81VGgbRwRjfJ6G3DdwXm-QBvx1f3SBvQluzrz9_q4Ps3hlSWX9Tv8KW8bqPMc2MV2Kzlw**; ptui_loginuin=2773324502; pt2gguin=o2773324502; uin=o2773324502; skey=@S0MUKKw4z; ptisp=os; ptcz=acb5099a80ee7ff8edb4a9f71c3e056580dc74dc5144beb11712019b3387d316 ',
+        'Cookie':'',
         }
     data='qzreferrer=http%3A%2F%2Fe.qq.com%2Fatlas%2F153094%2Freport%2Fcampaign%23&datetype=1&format=json&page=1&pagesize=20&fastdate=custom&sdate={date}&edate={date}&searchcname=&reportonly=0&_fastDate=false&callback=frameElement.callback%26script&owner=153094'.format(date=date)
     print date
