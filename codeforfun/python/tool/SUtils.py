@@ -8,10 +8,6 @@ def validId(Iid):
     parityBit=Iid[-1]
     ids=map(int,Iid[0:17])
     index=int(sum([a*b for a,b in zip(ids,map(int,powers))])%11)
-    if parityBits[index]==parityBit:
-        return True
-    else:
-        return False
-
+    return parityBits[index]==parityBit
 
 
