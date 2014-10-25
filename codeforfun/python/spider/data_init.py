@@ -180,9 +180,14 @@ def neihan_catch(count,fileter):
         if not len(dataList):
             break
         for item in dataList:
-            print item
-            #data=parseData(item,'neihan')
-            #push2Db(data)
+            topic=getTopicTemplate()
+            topic['node_id']=6
+            if 'group' not in item.keys():
+                return
+            topic['nickname']=item['group']['user']['name']
+            topic['body']=item['group']['content']
+            topic['imgs']=[item['group']['large_image']['url_list'][0]['url']]
+            pushTopic2Db(topic,1)
         max_time=content['max_time']
         count-=1
 
