@@ -71,9 +71,38 @@ def bmxz_get_detail(url,url_root):
     content_tab=soup.find('table',class_='plhin')
     print content_tab
 
+def gms_get(count):
+    url='http://www.520guimi.com/mobi/v6/stream/threads_list.json'
+    data='track={0}&fid=107&channel=1002005&client_version_code=10901&deviceId=A000004800AE17&auth=&pauth='
+    track=''
+    headers={
+        'content-type':'application/x-www-form-urlencoded',
+            }
+    i=0
+    while i<count:
+        response=requests.post(url,headers=headers,data=data.format(track),timeout=10)
+        content=eval(response.text)
+        track=content['track']
+        dataList=content['data']
+        for item in dataList:
+            i=i+1
+            keys=item.keys()
+            print
+            print i
+            if 'author' in keys:
+                print item['author']['nickname']
+            print item['extra']['topic']
+            print item['content']
+            if 'imgGroups' in keys:
+                print item['imgGroups']
+            print
+
+
+
 def main():
     #qwys_get()
-    bmxz_get()
+    #bmxz_get()
+    gms_get(30)
 
 if __name__ == '__main__':
     main()
