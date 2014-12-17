@@ -45,9 +45,50 @@ def initApp(nameList):
         result[name]=0
     return result
 
+def test():
+    url='http://e.qq.com/ec/api.php?mod=report&act=adlist&g_tk=136358241&d_p=0.6894646440632641&callback=frameElement.callback&script&g_tk=136358241'
+    headers={
+        'Content-Type':'application/x-www-form-urlencoded',
+        'Cookie':'',
+        }
+    data='qzreferrer=http%3A%2F%2Fe.qq.com%2Fatlas%2F275712%2Freport%2Forder&datetype=1&format=json&page=1&pagesize=20&sdate=2014-12-17&edate=2014-12-17&status=&fastdate=custom&searchtype=&searchname=&reportonly=0&product_type=&product_id=&callback=frameElement.callback%26script&owner=275712'
+    response=requests.post(url,headers=headers,data=data,timeout=5)
+    print response.content
+    result=getResponseContent(response.content,'callback')
+    #print result
+    for adv in result['data']['list']:
+        print adv['ordername'] ,adv['orderid']
+
+def getResponseContent(content,match):
+    pattern='{0}\((.*)\)'.format(match)
+    if not content:
+        return
+    m=re.search('callback\((.*)\);',content)
+    result=m.groups(0)[0]
+    result=eval(result)
+    return result
+
+def getDetail(orderid):
+    url='http://e.qq.com/ec/api.php?mod=report&act=getcrtsizedetail&g_tk=136358241&d_p=0.2254057547543198&orderid={0}&sdate=2014-12-17&edate=2014-12-17&page=1&pagesize=10&callback=_Callback&owner=275712'.format(orderid)
+    headers={
+        'Content-Type':'application/x-www-form-urlencoded',
+        'Cookie':'',
+        }
+    print url
+    response=requests.get(url,headers=headers)
+    print response.content
+    print
+    print getResponseContent(response.content)
+    #content=getResponseContent(response.content)
+    #for item in content['data']['list']:
+        #print item['time'],item['cost']
+
+
 def main():
-    for date in getDates('2014,9,2','2014,9,4'):
-        getHtml(date)
+    #for date in getDates('2014,9,2','2014,9,4'):
+        #getHtml(date)
+    test()
+    #getDetail(5904087)
 
 if __name__ == '__main__':
     main()
