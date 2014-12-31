@@ -1,0 +1,6 @@
+<resources>
+
+    <!--Text Size-->
+    <dimen name="app_text_size_normal">16sp</dimen>
+
+</resources>
