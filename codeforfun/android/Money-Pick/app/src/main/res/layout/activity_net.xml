@@ -5,6 +5,9 @@
     android:gravity="center_horizontal"
     android:layout_height="match_parent">
 
+    <include
+        layout="@layout/item_navibar"/>
+
     <TextView
         android:id="@+id/get"
         android:layout_margin="8dp"

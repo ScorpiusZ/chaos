@@ -3,4 +3,8 @@
     <!--Text Size-->
     <dimen name="app_text_size_normal">16sp</dimen>
 
+    <!--Navibar-->
+    <dimen name="app_navi_height">40dp</dimen>
+    <dimen name="app_navi_title_text_size">20sp</dimen>
+
 </resources>

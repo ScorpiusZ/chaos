@@ -1,13 +1,16 @@
 package com.blsm.s.moneypick;
 
-import com.blsm.s.moneypick.utils.ScLog;
+import android.widget.TextView;
+
 import com.blsm.s.moneypick.base.BaseActivity;
 import com.blsm.s.moneypick.http.RequestsCallback;
 import com.blsm.s.moneypick.http.RequestsCenter;
+import com.blsm.s.moneypick.utils.ScLog;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,8 +23,12 @@ public class NetWorkActivity extends BaseActivity implements RequestsCallback {
 
     private static final String TAG = NetWorkActivity.class.getSimpleName();
 
+    @ViewById
+    TextView navi_title;
+
     @AfterViews
     void init(){
+        navi_title.setText(this.getClass().getSimpleName());
     }
 
     @Click

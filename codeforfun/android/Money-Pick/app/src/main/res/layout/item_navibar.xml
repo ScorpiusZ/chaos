@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/navi_area"
+    android:background="@android:color/holo_red_light"
+    android:layout_width="match_parent" android:layout_height="@dimen/app_navi_height">
+
+    <TextView
+        android:id="@+id/navi_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Title"
+        android:layout_centerInParent="true"
+        android:textSize="@dimen/app_navi_title_text_size" />
+
+    <ImageView
+        android:id="@+id/navi_btn_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

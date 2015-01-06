@@ -4,6 +4,9 @@
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
+    <include
+        layout="@layout/item_navibar"/>
+
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
