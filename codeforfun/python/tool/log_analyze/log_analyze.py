@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 #coding:utf8
 import os
+import sys
 import api_util
 import id_util
 
@@ -107,7 +108,7 @@ def analyze_result(datetime):
             showStatics(article_id,id_util.encode_product(product_id))
 
 def main():
-    date='20150105'
+    date=sys.argv[1]
     analyze_articles(date)
     #find_products_in_articles(result('article',articles))
     analyze_products(date)
