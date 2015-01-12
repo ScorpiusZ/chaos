@@ -75,12 +75,28 @@ def find_products_in_articles(article_ids):
         product_id=api_util.getProductIdInArticle(article_id)
         print 'article id :{0} product id : {1}'.format(article_id,product_id)
 
+def showStatics(article_id,product_id):
+    article_sum=articles[article_id] if article_id in articles.keys() else 0
+    product_sum=products[product_id] if product_id in products.keys() else 0
+    order_sum=orders[product_id] if product_id in orders.keys() else 0
+    print 'article : {0}  , product :{1} ,orders :{2}'.format(article_sum,product_sum,order_sum)
+
+def test():
+    article_1440='b1ddb243fddd5ce061bc24aa60ae7fa6'
+    product_4059='e0314a96abcb9fd263347e3c8fa91b6b'
+    product_4875='56e616935976d621ea4031f0be98b07b'
+    article_1441='e6d28c211c56b8e6287f88727835f9e8'
+    showStatics(article_1440,product_4059)
+    showStatics(article_1441,product_4875)
+
+
 def main():
-    analyze_articles('20150105')
+    date='20150105'
+    analyze_articles(date)
     find_products_in_articles(result('article',articles))
-    #analyze_products('20150105')
+    #analyze_products(date)
     #result('product',products)
-    #analyze_orders('20150105')
+    #analyze_orders(date)
     #result('order_product_id',orders)
 
 if __name__ == '__main__':
