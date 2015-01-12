@@ -2,6 +2,7 @@
 #coding:utf8
 import os
 import api_util
+import id_util
 
 LOG_DIR='/Users/ScorpiusZjj/Temp/data/zip'
 
@@ -47,9 +48,17 @@ def analyze_orders(datetime):
     pattern='string: POST.*orders'
     analyze_item(generateCommandByPattern(pattern,datetime),orders,getOrderProductIds,':',1)
 
+def isTestOrder(api):
+    for keyword in ('test','测试'):
+        if keyword in api:
+            return True
+    return False
+
 def getOrderProductIds(api):
     order_product_id=[]
     next_contain_product_id=False
+    if isTestOrder(api):
+        return []
     for item in api.split('='):
         if next_contain_product_id :
             order_product_id.append(str(item).replace('product_id','').replace('product_prop_id',''))
@@ -61,11 +70,11 @@ def getOrderProductIds(api):
 
 def result(item_name,items_dict):
     sorted_items=sorted(items_dict, key=items_dict.get,reverse=True)
-    print 'top {0} items :'.format(LIMIT_NUM)
-    for item in sorted_items[:LIMIT_NUM]:
-        print item_name,item ,items_dict[item]
-    print 'all {1} {0}'.format(len(items_dict),item_name)
-    print
+    #print 'top {0} items :'.format(LIMIT_NUM)
+    #for item in sorted_items[:LIMIT_NUM]:
+        #print item_name,item ,items_dict[item]
+    #print 'all {1} {0}'.format(len(items_dict),item_name)
+    #print
     return sorted_items[:LIMIT_NUM]
 
 def find_products_in_articles(article_ids):
@@ -79,25 +88,33 @@ def showStatics(article_id,product_id):
     article_sum=articles[article_id] if article_id in articles.keys() else 0
     product_sum=products[product_id] if product_id in products.keys() else 0
     order_sum=orders[product_id] if product_id in orders.keys() else 0
-    print 'article : {0}  , product :{1} ,orders :{2}'.format(article_sum,product_sum,order_sum)
+    decrypt_article_id=id_util.decode_article(article_id).strip()
+    decrypt_product_id=id_util.decode_product(product_id).strip()
+    pattern='article {0:10}:{1:10} ,product {2:10}:{3:10} ,orders {4}'
+    print pattern.format(decrypt_article_id,article_sum,decrypt_product_id,product_sum,order_sum)
 
 def test():
     article_1440='b1ddb243fddd5ce061bc24aa60ae7fa6'
-    product_4059='e0314a96abcb9fd263347e3c8fa91b6b'
-    product_4875='56e616935976d621ea4031f0be98b07b'
+    product_4059='a5c78651165fd4845ea1f39698578f63'
+    product_4875='69ec4fcb3450ebd81be117f1bd2df0f4'
     article_1441='e6d28c211c56b8e6287f88727835f9e8'
     showStatics(article_1440,product_4059)
     showStatics(article_1441,product_4875)
 
+def analyze_result(datetime):
+    for article_id in result('article',articles):
+        for product_id in api_util.getProductIdInArticle(article_id):
+            showStatics(article_id,id_util.encode_product(product_id))
 
 def main():
     date='20150105'
     analyze_articles(date)
-    find_products_in_articles(result('article',articles))
-    #analyze_products(date)
+    #find_products_in_articles(result('article',articles))
+    analyze_products(date)
     #result('product',products)
-    #analyze_orders(date)
+    analyze_orders(date)
     #result('order_product_id',orders)
+    analyze_result(date)
 
 if __name__ == '__main__':
     main()
