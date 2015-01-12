@@ -104,8 +104,13 @@ def test():
 
 def analyze_result(datetime):
     for article_id in result('article',articles):
-        for product_id in api_util.getProductIdInArticle(article_id):
-            showStatics(article_id,id_util.encode_product(product_id))
+        product_ids=api_util.getProductIdInArticle(article_id)
+        if product_ids:
+            for product_id in api_util.getProductIdInArticle(article_id):
+                showStatics(article_id,id_util.encode_product(product_id))
+        else:
+            showStatics(article_id,'')
+
 
 def main():
     date=sys.argv[1]
