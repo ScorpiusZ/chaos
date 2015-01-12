@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 #coding:utf8
-import subprocess
 import os
+import api_util
 
 LOG_DIR='/Users/ScorpiusZjj/Temp/data/zip'
 
@@ -66,14 +66,22 @@ def result(item_name,items_dict):
         print item_name,item ,items_dict[item]
     print 'all {1} {0}'.format(len(items_dict),item_name)
     print
+    return sorted_items[:LIMIT_NUM]
+
+def find_products_in_articles(article_ids):
+    if not article_ids:
+        return
+    for article_id in article_ids:
+        product_id=api_util.getProductIdInArticle(article_id)
+        print 'article id :{0} product id : {1}'.format(article_id,product_id)
 
 def main():
     analyze_articles('20150105')
-    result('article',articles)
-    analyze_products('20150105')
-    result('product',products)
-    analyze_orders('20150105')
-    result('order_product_id',orders)
+    find_products_in_articles(result('article',articles))
+    #analyze_products('20150105')
+    #result('product',products)
+    #analyze_orders('20150105')
+    #result('order_product_id',orders)
 
 if __name__ == '__main__':
     main()
