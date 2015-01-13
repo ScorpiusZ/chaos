@@ -4,6 +4,7 @@ import os
 import sys
 import api_util
 import id_util
+from datetime import date,timedelta
 
 LOG_DIR='/Users/ScorpiusZjj/Temp/data/zip'
 
@@ -111,16 +112,30 @@ def analyze_result(datetime):
         else:
             showStatics(article_id,'')
 
+def getDates(date_from,date_to):
+    from_y,from_m,from_d=map(int,date_from.split(','))
+    to_y,to_m,to_d=map(int,date_to.split(','))
+    d_from=date(from_y,from_m,from_d)
+    d_to=date(to_y,to_m,to_d)
+    interval=d_to-d_from
+    return [d_from+timedelta(days=x) for x in xrange(interval.days+1)]
+
+def cleardata():
+    articles.clear()
+    products.clear()
+    orders.clear()
+
+def article_category(datetime):
+    print 'analyze date :{0}'.format(datetime)
+    cleardata()
+    analyze_articles(datetime)
+    analyze_products(datetime)
+    analyze_orders(datetime)
+    analyze_result(datetime)
 
 def main():
-    date=sys.argv[1]
-    analyze_articles(date)
-    #find_products_in_articles(result('article',articles))
-    analyze_products(date)
-    #result('product',products)
-    analyze_orders(date)
-    #result('order_product_id',orders)
-    analyze_result(date)
+    for date in getDates('2015,01,05','2015,01,07'):
+        article_category(str(date).replace('-',''))
 
 if __name__ == '__main__':
     main()
