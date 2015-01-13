@@ -180,6 +180,11 @@ def cleardata():
     clearDict(articles)
     clearDict(products)
     clearDict(orders)
+    clearDict(carts)
+    clearDict(replies)
+    clearDict(topic_creates)
+    clearDict(topic_views)
+    clearDict(private_msgs)
 
 def article_category(datetime):
     print 'analyze date :{0}'.format(datetime)
@@ -198,6 +203,7 @@ def community_product_result():
     calcPv('private_msg',private_msgs)
 
 def community_product_category(datetime):
+    cleardata()
     analyze_products(datetime)
     analyze_cart(datetime)
     analyze_reply(datetime)
