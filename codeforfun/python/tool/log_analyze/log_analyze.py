@@ -9,14 +9,14 @@ from datetime import date,timedelta
 LOG_DIR='/Users/ScorpiusZjj/Temp/data/zip'
 
 LIMIT_NUM=15
-articles={'ids':{},'device':{}}
-products={'ids':{},'device':{}}
-orders={'ids':{},'device':{}}
-carts={'ids':{},'device':{}}
-replies={'ids':{},'device':{}}
-topic_creates={'ids':{},'device':{}}
-topic_views={'ids':{},'device':{}}
-private_msgs={'ids':{},'device':{}}
+articles={'ids':{},'device':[]}
+products={'ids':{},'device':[]}
+orders={'ids':{},'device':[]}
+carts={'ids':{},'device':[]}
+replies={'ids':{},'device':[]}
+topic_creates={'ids':{},'device':[]}
+topic_views={'ids':{},'device':[]}
+private_msgs={'ids':{},'device':[]}
 
 
 def countNum(item_id,items,key):
@@ -25,13 +25,16 @@ def countNum(item_id,items,key):
     else:
         items[key][item_id]=1
 
+def add_device(item_id,items,key):
+    items[key].append(item_id)
+
 def analyze_item(command,items_dict,get_ids_func):
     print 'analyze_item : command {0}'.format(command)
     pipe=os.popen(command)
     for line in pipe.readlines():
         device_id,item_ids=get_ids_func(line)
         if device_id:
-            countNum(device_id,items_dict,'device')
+            add_device(device_id,items_dict,'device')
         for item_id in item_ids:
             countNum(item_id,items_dict,'ids')
 
@@ -164,11 +167,14 @@ def getDates(date_from,date_to):
 
 def clearDict(items):
     for key in items.keys():
-        items[key].clear()
+        if type(items[key]) == list:
+            del items[key][:]
+        else:
+            items[key].clear()
 
 def calcPv(name,items):
     view_total=sum(items['ids'].values())
-    device_total=len(items['device'].keys())
+    device_total=len(api_util.list_unique(items['device']))
     print '{2} :view_total {0} : device_total {1}'.format(view_total,device_total,name)
 
 def showPv():
@@ -214,7 +220,7 @@ def community_product_category(datetime):
 
 def main():
     for date in getDates('2015,01,05','2015,01,05'):
-        community_product_category(str(date).replace('-',''))
+        article_category(str(date).replace('-',''))
 
 if __name__ == '__main__':
     main()
