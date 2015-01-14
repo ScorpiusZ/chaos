@@ -100,7 +100,7 @@ def getOrderInfos(api):
         if next_contain_device_id:
             device_id=str(item).replace('name','')
         if next_contain_appId:
-            appId=str(item).replace('device_id','')
+            appId=str(item).replace('device_id','').replace('comment','').replace('coupon','')
         next_contain_product_id= 'product_id' in item
         next_contain_device_id= 'device_id' in item
         next_contain_appId='api_key' in item
