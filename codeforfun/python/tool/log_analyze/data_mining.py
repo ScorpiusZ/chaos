@@ -2,12 +2,13 @@
 #coding:utf8
 import gzip
 import re
+import datetime
 
-LOG_DIR='/Users/ScorpiusZjj/Temp/data/zip'
-CSV_DIR='/Users/ScorpiusZjj/Temp/data/csv'
+LOG_DIR='/Users/ScorpiusZ/Temp/data/zips'
+CSV_DIR='/Users/ScorpiusZ/Temp/data/csvs'
 
 #out_format='time {0:30} ,api {1:12} , AppId {2:10} ,Device_id {3:30} ,values {4}'
-out_format='{0:30},{1:12},{2:10},{3:30},{4}'
+out_format='{0},{1},{2},{3},{4}'
 
 def getCsvFile(datetime):
     return '{0}/{1}.csv'.format(CSV_DIR,datetime)
@@ -21,7 +22,9 @@ def print_data_mined(time,api,appId,device_id,item_ids):
     return out_format.format(time,api,appId,device_id,':'.join(item_ids))
 
 def getTime(line):
-    return str(line).split('#')[0].replace('I, [','') if line else ''
+    time=str(line).split('#')[0].replace('I','').replace(',','').replace('[','') if line else ''
+    parsed_time=datetime.datetime.strptime(time.strip(),'%Y-%m-%dT%H:%M:%S.%f')
+    return parsed_time
 
 def getAppDeviceId(line):
     appId,device_id=str(line).split(' - ')[-2:]
@@ -150,7 +153,7 @@ def getData(datetime):
 
 
 def main():
-    getData('20150105')
+    getData('20150110')
 
 if __name__ == '__main__':
     main()
