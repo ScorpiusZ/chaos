@@ -54,10 +54,7 @@ def getHomeHtml(tags,url):
         return
 
 def main():
-    url='http://image.yepcolor.com/sm/wsdetail.html'
-    #url='http://image.yepcolor.com/sm/chanpinbaike/fangzhendaomo.htm'
-    getHomeHtml('',url)
-    #dealHtml('',url)
+    pass
 
 if __name__ == '__main__':
     main()
