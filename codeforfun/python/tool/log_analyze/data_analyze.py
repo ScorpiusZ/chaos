@@ -16,7 +16,7 @@ def getDataFrame(volumn_name,datetime):
 
 def getItemCount(item_id,datetime,item_tag):
     result=rowGroupCount(getDataFrame(item_tag,datetime),'values')
-    return result[item_id] if item_id in result.keys() else 0
+    return result.get(item_id,0)
 
 def getProductViewCount(product_id,datetime):
     return getItemCount(product_id,datetime,'product')
@@ -45,8 +45,8 @@ def getUniqDevicesCreateCart(datetime):
 def showBriefStatics(datetime):
     return getRootDataFrame(datetime)['api_tag'].value_counts()
 
-def getProductCounts(order_count_list,product_id):
-    return order_count_list[product_id] if product_id in order_count_list else 0
+def getProductCounts(products_list,product_id):
+    return products_list.get(product_id,0)
 
 def showProductPV(datetime,limit):
     print datetime
