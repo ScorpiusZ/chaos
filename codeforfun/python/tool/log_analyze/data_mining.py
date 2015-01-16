@@ -3,9 +3,10 @@
 import gzip
 import re
 import datetime
+from urllib import unquote
 
-LOG_DIR='/Users/ScorpiusZ/Temp/data/zips'
-CSV_DIR='/Users/ScorpiusZ/Temp/data/csvs'
+LOG_DIR='/Users/ScorpiusZjj/Temp/data/zip'
+CSV_DIR='/Users/ScorpiusZjj/Temp/data/csv'
 
 #out_format='time {0:30} ,api {1:12} , AppId {2:10} ,Device_id {3:30} ,values {4}'
 out_format='{0},{1},{2},{3},{4}'
@@ -125,8 +126,30 @@ def parsePrivateMsg(line):
     time=getTime(line)
     return print_data_mined(time,'private_msgs',appId,device_id,[])
 
+def getParamValue(line,key_name):
+    api=str(line).split(' - ')[-3].split('?')[-1].replace('\"','')
+    for item in api.split('&'):
+        if key_name in item:
+            return str(item).split('=')[-1]
+    else:
+        return ''
+
+def parseHome(line):
+    appId,device_id=getAppDeviceId(line)
+    time=getTime(line)
+    registe_date=getRegisteDate(line,'registe_date')
+    return print_data_mined(time,'home',appId,device_id,[registe_date] if registe_date else [])
+
+def parseProductList(line):
+    appId,device_id=getAppDeviceId(line)
+    time=getTime(line)
+    tag_name=unquote(getParamValue(line,'tag'))
+    return print_data_mined(time,'product_list',appId,device_id,[tag_name] if tag_name else [])
+
 def parseCategories():
     return {
+            'GET .*home?':parseHome,
+            'GET .*products?':parseProductList,
             'string: POST.*cart':parseCart,
             'GET .*articles/':parseArticle,
             'GET .*products/':parseProduct,
@@ -134,7 +157,8 @@ def parseCategories():
             'string: POST.*orders':parseOrder,
             'POST .*nodes/.*/topics':parseTopicCreate,
             'POST .*private_messages':parsePrivateMsg,
-            'POST .*topics/.*replies':parseReplies, }
+            'POST .*topics/.*replies':parseReplies,
+            }
 
 def parseData(line,datetime):
     for pattern,parseFunc in parseCategories().items():
@@ -153,7 +177,7 @@ def getData(datetime):
 
 
 def main():
-    getData('20150110')
+    getData('20150105')
 
 if __name__ == '__main__':
     main()
