@@ -3,6 +3,7 @@
 import pandas as pd
 import data_mining as dm
 import log_analyze as la
+import id_util as idu
 
 def getCsvFile(datetime):
     return '{0}/{1}.csv'.format(dm.CSV_DIR,datetime)
@@ -44,14 +45,47 @@ def getUniqDevicesCreateCart(datetime):
 def showBriefStatics(datetime):
     return getRootDataFrame(datetime)['api_tag'].value_counts()
 
+def getProductCounts(order_count_list,product_id):
+    return order_count_list[product_id] if product_id in order_count_list else 0
+
+def showProductPV(datetime,limit):
+    print datetime
+    order_product_counts=getOrderCounts(datetime)
+    cart_product_counts=getCartCount(datetime)
+    result=rowGroupCount(getDataFrame('product',datetime),'values')
+    for product_id in result[:limit].keys():
+        print '{0:10},{1:10},{3:10},{2}'\
+                .format(idu.decode_product(product_id).strip(),result[product_id],\
+                getProductCounts(order_product_counts,product_id),\
+                getProductCounts(cart_product_counts,product_id))
+
+def getProductList(datetime,key_name):
+    product_ids_list=[]
+    for product_ids in getDataFrame(key_name,datetime)['values'].dropna():
+        for product in product_ids.split(':'):
+            product_ids_list.append(product)
+    return product_ids_list
+
+def getOrderOrCartCount(datetime,key_name):
+    df=pd.Series(getProductList(datetime,key_name),name='values')
+    return df.value_counts()
+
+def getOrderCounts(datetime):
+    return getOrderOrCartCount(datetime,'orders')
+
+def getCartCount(datetime):
+    return getOrderOrCartCount(datetime,'cart')
+
 def test():
     datetime='20150111'
     product_id='69ec4fcb3450ebd81be117f1bd2df0f4'
-    print getUniqDevicesViewProduct(datetime)
-    print getUniqDevicesCreateCart(datetime)
+    #showProductPV(datetime,50)
+    #print getUniqDevicesVi,20ewProduct(datetime)
+    #print getUniqDevicesCreateCart(datetime)
     #print showBriefStatics(datetime)
-    #for date in la.getDates('2015,01,01','2015,01,14'):
-        #print showBriefStatics(str(date).replace('-',''))
+    #showProductPV('20150115',50)
+    for date in la.getDates('2015,01,14','2015,01,15'):
+        showProductPV(str(date).replace('-',''),50)
     #print getRootDataFrame(datetime)['api_tag'].value_counts()
     #print rowGroupCount(getDataFrame('product',datetime),'values')
     #print getProductViewCount(product_id,datetime)
