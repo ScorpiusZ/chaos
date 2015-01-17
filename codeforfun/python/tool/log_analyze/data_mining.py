@@ -4,9 +4,10 @@ import gzip
 import re
 import datetime
 from urllib import unquote
+import Config
 
-LOG_DIR='/Users/ScorpiusZjj/Temp/data/zip'
-CSV_DIR='/Users/ScorpiusZjj/Temp/data/csv'
+LOG_DIR=Config.getLogDir()
+CSV_DIR=Config.getCsvDir()
 
 #out_format='time {0:30} ,api {1:12} , AppId {2:10} ,Device_id {3:30} ,values {4}'
 out_format='{0},{1},{2},{3},{4}'
