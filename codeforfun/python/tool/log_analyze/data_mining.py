@@ -87,10 +87,7 @@ def parseTopicView(line):
         return print_data_mined(time,'topic_view',appId,device_id,[topic_id])
 
 def isTestOrder(api):
-    for keyword in ('test','测试'):
-        if keyword in api:
-            return True
-    return False
+    return any(map(lambda x : x in api, ['test','测试']))
 
 def getOrderInfos(api):
     order_product_id=[]
@@ -138,7 +135,7 @@ def getParamValue(line,key_name):
 def parseHome(line):
     appId,device_id=getAppDeviceId(line)
     time=getTime(line)
-    registe_date=getRegisteDate(line,'registe_date')
+    registe_date=getParamValue(line,'registe_date')
     return print_data_mined(time,'home',appId,device_id,[registe_date] if registe_date else [])
 
 def parseProductList(line):
@@ -172,13 +169,19 @@ def readFromGzipFile(filename,func_parse_data,datetime):
             func_parse_data(line,datetime)
 
 def getData(datetime):
+    import os
+    csvfile=getCsvFile(datetime)
+    if os.path.exists(csvfile):
+        print '{0} exist,rewrite it '.format(csvfile)
+        os.remove(csvfile)
     for no in [1,2,3]:
         gzfile='{0}/{1}.log{2}.gz'.format(LOG_DIR,datetime,no)
         readFromGzipFile(gzfile,parseData,datetime)
 
-
 def main():
-    getData('20150105')
+    import log_analyze as la
+    for date in la.getDates('2015,01,11','2015,01,11'):
+        getData(str(date).replace('-',''))
 
 if __name__ == '__main__':
     main()

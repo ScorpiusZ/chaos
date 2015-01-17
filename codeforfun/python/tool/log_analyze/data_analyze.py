@@ -4,6 +4,7 @@ import pandas as pd
 import data_mining as dm
 import log_analyze as la
 import id_util as idu
+import datetime
 
 def getCsvFile(datetime):
     return '{0}/{1}.csv'.format(dm.CSV_DIR,datetime)
@@ -22,13 +23,13 @@ def getProductViewCount(product_id,datetime):
     return getItemCount(product_id,datetime,'product')
 
 def getArticleViewCount(article_id,datetime):
-    return getItemCount(product_id,datetime,'product')
+    return getItemCount(article_id,datetime,'article')
 
 def rowGroupCount(dataFrame,rowName):
     return dataFrame[rowName].value_counts()
 
 def getUniqDevices(item_tag,datetime):
-    return len(rowGroupCount(getDataFrame(item_tag,datetime),'device_id'))
+    return len(getDataFrame(item_tag,datetime)['device_id'].unique())
 
 def getUniqDevicesViewProduct(datetime):
     return getUniqDevices('product',datetime)
@@ -76,16 +77,25 @@ def getOrderCounts(datetime):
 def getCartCount(datetime):
     return getOrderOrCartCount(datetime,'cart')
 
+def day_or_night(date):
+    time=datetime.datetime.strptime(date.strip(),'%Y-%m-%d %H:%M:%S.%f')
+    return 'day' if 9<=time.hour<=19 else 'night'
+
+
 def test():
     datetime='20150111'
     product_id='69ec4fcb3450ebd81be117f1bd2df0f4'
+    order_df=getDataFrame('orders',datetime)
+    order_df['new_time']=order_df.time.apply(day_or_night)
+    print order_df['new_time'].value_counts()
+    #print order_df.sort('time',ascending=False).head(3)
     #showProductPV(datetime,50)
     #print getUniqDevicesVi,20ewProduct(datetime)
     #print getUniqDevicesCreateCart(datetime)
     #print showBriefStatics(datetime)
     #showProductPV('20150115',50)
-    for date in la.getDates('2015,01,14','2015,01,15'):
-        showProductPV(str(date).replace('-',''),50)
+    #for date in la.getDates('2015,01,14','2015,01,15'):
+        #showProductPV(str(date).replace('-',''),50)
     #print getRootDataFrame(datetime)['api_tag'].value_counts()
     #print rowGroupCount(getDataFrame('product',datetime),'values')
     #print getProductViewCount(product_id,datetime)
