@@ -186,7 +186,7 @@ def main():
     import sys
     if len(sys.argv)>1:
         date=sys.argv[1]
-        getData(date_to)
+        getData(date)
     else:
         for date in la.getDates('2015,01,11','2015,01,11'):
             getData(str(date).replace('-',''))
