@@ -183,8 +183,13 @@ def getData(datetime):
 
 def main():
     import log_analyze as la
-    for date in la.getDates('2015,01,11','2015,01,11'):
-        getData(str(date).replace('-',''))
+    import sys
+    if len(sys.argv)>1:
+        date=sys.argv[1]
+        getData(date_to)
+    else:
+        for date in la.getDates('2015,01,11','2015,01,11'):
+            getData(str(date).replace('-',''))
 
 if __name__ == '__main__':
     main()
