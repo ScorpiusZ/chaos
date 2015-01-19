@@ -1,13 +1,13 @@
 #! /usr/bin/env python
 #coding:utf8
 import pandas as pd
-import data_mining as dm
 import log_analyze as la
 import id_util as idu
 import datetime
+import Config
 
 def getCsvFile(datetime):
-    return '{0}/{1}.csv'.format(dm.CSV_DIR,datetime)
+    return '{0}/{1}.csv'.format(Config.getCsvDir(),datetime)
 
 def getRootDataFrame(datetime):
     return pd.read_csv(getCsvFile(datetime),names=['time','api_tag','app_id','device_id','values'])
@@ -56,7 +56,7 @@ def showProductPV(datetime,limit):
     result=rowGroupCount(getDataFrame('product',datetime),'values')
     for product_id in result[:limit].keys():
         print '{0:10},{1:10},{3:10},{2}'\
-                .format(idu.decode_product(product_id).strip(),result[product_id],\
+                .format(idu.decode_product(product_id),result[product_id],\
                 getProductCounts(order_product_counts,product_id),\
                 getProductCounts(cart_product_counts,product_id))
 

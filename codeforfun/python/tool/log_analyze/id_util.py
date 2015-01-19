@@ -12,16 +12,16 @@ pad=lambda s: s + (BS - len(s) % BS) * chr(BS - len(s) % BS)
 unpad = lambda s : s[0:-ord(s[-1])]
 
 def encode_product(product_id):
-    return aes_encript(product_id,product_key)
+    return aes_encript(product_id,product_key).strip()
 
 def decode_product(product_id):
-    return aes_decript(product_id.decode('hex'),product_key)
+    return aes_decript(product_id.decode('hex'),product_key).strip()
 
 def encode_article(article_id):
-    return aes_encript(article_id,article_key)
+    return aes_encript(article_id,article_key).strip()
 
 def decode_article(article_id):
-    return aes_decript(article_id.decode('hex'),article_key)
+    return aes_decript(article_id.decode('hex'),article_key).strip()
 
 def aes_encript(content,key):
     iv='1e5673b2572af26a8364a50af84c7d2a'.decode('hex')
