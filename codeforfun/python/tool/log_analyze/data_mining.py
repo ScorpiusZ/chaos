@@ -25,7 +25,10 @@ def print_data_mined(time,api,appId,device_id,item_ids):
 
 def getTime(line):
     time=str(line).split('#')[0].replace('I','').replace(',','').replace('[','') if line else ''
-    parsed_time=datetime.datetime.strptime(time.strip(),'%Y-%m-%dT%H:%M:%S.%f')
+    try:
+        parsed_time=datetime.datetime.strptime(time.strip(),'%Y-%m-%dT%H:%M:%S.%f')
+    except:
+        parsed_time=datetime.datetime.strptime(time.split('time failed time out.')[-1].strip(),'%Y-%m-%dT%H:%M:%S.%f')
     return parsed_time
 
 def getAppDeviceId(line):

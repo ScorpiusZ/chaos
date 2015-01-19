@@ -5,8 +5,9 @@ import sys
 import api_util
 import id_util
 from datetime import date,timedelta
+import Config
 
-LOG_DIR='/Users/ScorpiusZjj/Temp/data/zip'
+LOG_DIR=Config.getLogDir()
 
 LIMIT_NUM=15
 articles={'ids':{},'device':[]}
@@ -219,8 +220,14 @@ def community_product_category(datetime):
     community_product_result()
 
 def main():
-    for date in getDates('2015,01,05','2015,01,05'):
-        article_category(str(date).replace('-',''))
+    import sys
+    if len(sys.argv) >1:
+        date=sys.argv[1]
+        article_category(date)
+    else:
+        for date in getDates('2015,01,05','2015,01,05'):
+            article_category(str(date).replace('-',''))
+
 
 if __name__ == '__main__':
     main()
