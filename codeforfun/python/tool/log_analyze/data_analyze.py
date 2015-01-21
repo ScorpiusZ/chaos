@@ -1,19 +1,19 @@
 #! /usr/bin/env python
 #coding:utf8
 import pandas as pd
-import log_analyze as la
 import id_util as idu
 import datetime
 import Config
+import data_mining as dm
 
-def getCsvFile(datetime):
-    return '{0}/{1}.csv'.format(Config.getCsvDir(),datetime)
+volumn_names=['time','api_tag','app_id','device_id','values']
 
-def getRootDataFrame(datetime):
-    return pd.read_csv(getCsvFile(datetime),names=['time','api_tag','app_id','device_id','values'])
-
-def getDataFrame(volumn_name,datetime):
-    return getRootDataFrame(datetime)[getRootDataFrame(datetime)['api_tag']==volumn_name]
+def getDataFrame(api_type,datetime):
+    import os
+    csvfile=dm.getCsvFile(datetime,api_type)
+    if not os.path.exists(csvfile):
+        dm.getData(datetime,[api_type])
+    return pd.read_csv(csvfile,names=volumn_names)
 
 def getItemCount(item_id,datetime,item_tag):
     result=rowGroupCount(getDataFrame(item_tag,datetime),'values')
@@ -43,9 +43,6 @@ def getUniqDevicesCreateOrders(datetime):
 def getUniqDevicesCreateCart(datetime):
     return getUniqDevices('cart',datetime)
 
-def showBriefStatics(datetime):
-    return getRootDataFrame(datetime)['api_tag'].value_counts()
-
 def getProductCounts(products_list,product_id):
     return products_list.get(product_id,0)
 
@@ -72,7 +69,7 @@ def getOrderOrCartCount(datetime,key_name):
     return df.value_counts()
 
 def getOrderCounts(datetime):
-    return getOrderOrCartCount(datetime,'orders')
+    return getOrderOrCartCount(datetime,'order')
 
 def getCartCount(datetime):
     return getOrderOrCartCount(datetime,'cart')
@@ -83,20 +80,14 @@ def day_or_night(date):
 
 
 def test():
-    datetime='20150111'
-    product_id='69ec4fcb3450ebd81be117f1bd2df0f4'
-    order_df=getDataFrame('orders',datetime)
-    order_df['new_time']=order_df.time.apply(day_or_night)
-    print order_df['new_time'].value_counts()
+    datetime='20150105'
+    #product_id='69ec4fcb3450ebd81be117f1bd2df0f4'
+    #print order_df['new_time'].value_counts()
+    #print getDataFrame('home',datetime)['values'].dropna().value_counts()
     #print order_df.sort('time',ascending=False).head(3)
     #showProductPV(datetime,50)
-    #print getUniqDevicesVi,20ewProduct(datetime)
-    #print getUniqDevicesCreateCart(datetime)
-    #print showBriefStatics(datetime)
+    print getUniqDevicesCreateCart(datetime)
     #showProductPV('20150115',50)
-    #for date in la.getDates('2015,01,14','2015,01,15'):
-        #showProductPV(str(date).replace('-',''),50)
-    #print getRootDataFrame(datetime)['api_tag'].value_counts()
     #print rowGroupCount(getDataFrame('product',datetime),'values')
     #print getProductViewCount(product_id,datetime)
 

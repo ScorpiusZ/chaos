@@ -12,16 +12,17 @@ CSV_DIR=Config.getCsvDir()
 #out_format='time {0:30} ,api {1:12} , AppId {2:10} ,Device_id {3:30} ,values {4}'
 out_format='{0},{1},{2},{3},{4}'
 
-def getCsvFile(datetime):
-    return '{0}/{1}.csv'.format(CSV_DIR,datetime)
+def getCsvFile(datetime,api_type):
+    return '{0}/{1}_{2}.csv'.format(CSV_DIR,datetime,api_type)
 
 def toCsvFile(content,datetime):
     if content:
-        with open(getCsvFile(datetime),'a') as csvFile:
-            csvFile.write(content+'\n')
+        api_type,data=content
+        with open(getCsvFile(datetime,api_type),'a') as csvFile:
+            csvFile.write(data+'\n')
 
 def print_data_mined(time,api,appId,device_id,item_ids):
-    return out_format.format(time,api,appId,device_id,':'.join(item_ids))
+    return api,out_format.format(time,api,appId,device_id,':'.join(item_ids))
 
 def getTime(line):
     time=str(line).split('#')[0].replace('I','').replace(',','').replace('[','') if line else ''
@@ -63,7 +64,7 @@ def parseReplies(line):
     appId,device_id=getAppDeviceId(line)
     time =getTime(line)
     topic_id=str(line).split(' - ')[-3].split('/')[-2]
-    return print_data_mined(time,'replies',appId,device_id,[topic_id])
+    return print_data_mined(time,'reply',appId,device_id,[topic_id])
 
 def getTargeId(line):
     return '' if '?' in line else str(line).split(' - ')[-3].split('/')[-1].replace('\"','')
@@ -114,7 +115,7 @@ def getOrderInfos(api):
 def parseOrder(line):
     time=getTime(line)
     appId,device_id,product_ids=getOrderInfos(line)
-    return print_data_mined(time,'orders',appId,device_id,product_ids)
+    return print_data_mined(time,'order',appId,device_id,product_ids)
 
 def parseTopicCreate(line):
     appId,device_id=getAppDeviceId(line)
@@ -125,7 +126,7 @@ def parseTopicCreate(line):
 def parsePrivateMsg(line):
     appId,device_id=getAppDeviceId(line)
     time=getTime(line)
-    return print_data_mined(time,'private_msgs',appId,device_id,[])
+    return print_data_mined(time,'private_msg',appId,device_id,[])
 
 def getParamValue(line,key_name):
     api=str(line).split(' - ')[-3].split('?')[-1].replace('\"','')
@@ -138,7 +139,7 @@ def getParamValue(line,key_name):
 def parseHome(line):
     appId,device_id=getAppDeviceId(line)
     time=getTime(line)
-    registe_date=getParamValue(line,'registe_date')
+    registe_date=getParamValue(line,'register_date')
     return print_data_mined(time,'home',appId,device_id,[registe_date] if registe_date else [])
 
 def parseProductList(line):
@@ -147,49 +148,69 @@ def parseProductList(line):
     tag_name=unquote(getParamValue(line,'tag'))
     return print_data_mined(time,'product_list',appId,device_id,[tag_name] if tag_name else [])
 
-def parseCategories():
-    return {
-            'GET .*home?':parseHome,
-            'GET .*products?':parseProductList,
-            'string: POST.*cart':parseCart,
-            'GET .*articles/':parseArticle,
-            'GET .*products/':parseProduct,
-            'GET .*topics/':parseTopicView,
-            'string: POST.*orders':parseOrder,
-            'POST .*nodes/.*/topics':parseTopicCreate,
-            'POST .*private_messages':parsePrivateMsg,
-            'POST .*topics/.*replies':parseReplies,
-            }
+def parseCategories(type_list=None):
+    category_map={
+        'home':'GET .*home?',
+        'product_list':'GET .*products?',
+        'cart':'string: POST.*cart',
+        'article':'GET .*articles/',
+        'product':'GET .*products/',
+        'topic_view':'GET .*topics/',
+        'order':'string: POST.*orders',
+        'topic_create':'POST .*nodes/.*/topics',
+        'private_msg':'POST .*private_messages',
+        'reply':'POST .*topics/.*replies',
+        }
+    category_list={
+        'GET .*home?':parseHome,
+        'GET .*products?':parseProductList,
+        'string: POST.*cart':parseCart,
+        'GET .*articles/':parseArticle,
+        'GET .*products/':parseProduct,
+        'GET .*topics/':parseTopicView,
+        'string: POST.*orders':parseOrder,
+        'POST .*nodes/.*/topics':parseTopicCreate,
+        'POST .*private_messages':parsePrivateMsg,
+        'POST .*topics/.*replies':parseReplies,
+        }
+    if type_list:
+        type_list_name=[v for k,v in category_map.items() if k in type_list]
+        return {k:v for k,v in category_list.items() if k in type_list_name}
+    else:
+        return category_list
 
-def parseData(line,datetime):
-    for pattern,parseFunc in parseCategories().items():
+
+def parseData(line,datetime,type_list):
+    for pattern,parseFunc in parseCategories(type_list).items():
         if re.search(pattern,line):
             toCsvFile(parseFunc(line),datetime)
 
-def readFromGzipFile(filename,func_parse_data,datetime):
+def readFromGzipFile(filename,func_parse_data,datetime,type_list):
     with gzip.open(filename,'r') as gzfile:
         for line in gzfile:
-            func_parse_data(line,datetime)
+            func_parse_data(line,datetime,type_list)
 
-def getData(datetime):
+def getData(datetime,type_list=None):
     import os
-    csvfile=getCsvFile(datetime)
-    if os.path.exists(csvfile):
-        print '{0} exist,rewrite it '.format(csvfile)
-        os.remove(csvfile)
+    if not type_list:
+        pass
+    else:
+        for api_type in type_list:
+            csvfile=getCsvFile(datetime,api_type)
+            if os.path.exists(csvfile):
+                print '{0} exist,rewrite it '.format(csvfile)
+                os.remove(csvfile)
+            else:
+                print '{0} not exists'.format(csvfile)
+    if not parseCategories(type_list):
+        print 'no categories for {0}'.format(type_list)
+        return
     for no in [1,2,3]:
         gzfile='{0}/{1}.log{2}.gz'.format(LOG_DIR,datetime,no)
-        readFromGzipFile(gzfile,parseData,datetime)
+        readFromGzipFile(gzfile,parseData,datetime,type_list)
 
 def main():
-    import log_analyze as la
-    import sys
-    if len(sys.argv)>1:
-        date=sys.argv[1]
-        getData(date)
-    else:
-        for date in la.getDates('2015,01,11','2015,01,11'):
-            getData(str(date).replace('-',''))
+    getData('20150105',['home'])
 
 if __name__ == '__main__':
     main()
