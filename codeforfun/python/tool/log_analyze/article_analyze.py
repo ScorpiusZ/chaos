@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 #coding:utf8
 import data_analyze as da
+import data_mining as dm
 import api_util
 import id_util
 
@@ -26,16 +27,28 @@ def article_statics(datetime,limit):
             print show_format.format(id_util.decode_article(article_id),result[article_id],0,0,0,0)
 
 
+def init(datetime):
+    import os
+    init_list=[]
+    for api_type in ['article','product','order','cart']:
+        if not os.path.exists(dm.getCsvFile(datetime,api_type)):
+            init_list.append(api_type)
+    if init_list:
+        dm.getData(datetime,init_list)
+
 def main():
     datetime='20150114'
     import sys
     if len(sys.argv)>1:
         datetime=sys.argv[1]
+        init(datetime)
         article_statics(datetime,LIMIT)
     else:
         import log_analyze as la
         for date in la.getDates('2015,01,11','2015,01,15'):
-            article_statics(str(date).replace('-',''),LIMIT)
+            datetime=str(date).replace('-','')
+            init(datetime)
+            article_statics(datetime,LIMIT)
 
 if __name__ == '__main__':
     main()

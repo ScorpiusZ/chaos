@@ -177,7 +177,7 @@ def parseCategories(type_list=None):
         type_list_name=[v for k,v in category_map.items() if k in type_list]
         return {k:v for k,v in category_list.items() if k in type_list_name}
     else:
-        return category_list
+        return {}
 
 
 def parseData(line,datetime,type_list):
