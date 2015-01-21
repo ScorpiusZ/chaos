@@ -205,6 +205,10 @@ def getData(datetime,type_list=None):
     if not parseCategories(type_list):
         print 'no categories for {0}'.format(type_list)
         return
+    else:
+        print
+        print 'munging data ING.....'
+        print
     for no in [1,2,3]:
         gzfile='{0}/{1}.log{2}.gz'.format(LOG_DIR,datetime,no)
         readFromGzipFile(gzfile,parseData,datetime,type_list)
