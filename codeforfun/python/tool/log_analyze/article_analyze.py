@@ -6,7 +6,7 @@ import api_util
 import id_util
 
 show_format='article_id:{0:10},view_count: {1:10}, product_id:{2:10}\
-        view_count:{3:10}, cart_count:{4:6},order_count{5:6}'
+        view_count:{3:10}, cart_count:{4:6},order_count{5:6}, unique_device:{6}'
 LIMIT=20
 
 def article_statics(datetime,limit):
@@ -17,14 +17,16 @@ def article_statics(datetime,limit):
     result=da.rowGroupCount(da.getDataFrame('article',datetime),'values')
     for article_id in result[:limit].keys():
         product_ids=api_util.getProductIdInArticle(article_id)
+        unique_device_num=article_unique_device_num(datetime,article_id)
         if product_ids:
             for product_id in product_ids:
                 print show_format.format(id_util.decode_article(article_id),result[article_id],product_id,\
                         da.getProductCounts(product_view_counts,id_util.encode_product(product_id)),\
                         da.getProductCounts(cart_product_counts,id_util.encode_product(product_id)),\
-                        da.getProductCounts(order_product_counts,id_util.encode_product(product_id)))
+                        da.getProductCounts(order_product_counts,id_util.encode_product(product_id)),\
+                        unique_device_num)
         else:
-            print show_format.format(id_util.decode_article(article_id),result[article_id],0,0,0,0)
+            print show_format.format(id_util.decode_article(article_id),result[article_id],0,0,0,0,unique_device_num)
 
 
 def init(datetime):
@@ -35,6 +37,10 @@ def init(datetime):
             init_list.append(api_type)
     if init_list:
         dm.getData(datetime,init_list)
+
+def article_unique_device_num(datetime,article_id):
+    article_df=da.getDataFrame('article',datetime)
+    return len(article_df[article_df['values'] == article_id]['device_id'].dropna().unique())
 
 def main():
     datetime='20150114'
