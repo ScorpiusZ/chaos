@@ -83,6 +83,11 @@ def day_or_night(date):
     time=datetime.datetime.strptime(date.strip(),'%Y-%m-%d %H:%M:%S.%f')
     return 'day' if 9<=time.hour<=19 else 'night'
 
+def getTagStatic(datetime,limit):
+    print datetime
+    tag_df=getDataFrame('product_list',datetime)
+    print tag_df['values'].value_counts().sum()
+    print tag_df['values'].value_counts()[:limit]
 
 def test():
     datetime='20150105'

@@ -215,7 +215,7 @@ def getData(datetime,type_list=None):
         readFromGzipFile(gzfile,parseData,datetime,type_list)
 
 def main():
-    getData('20150105',['home'])
+    getData('20150105',['home', 'product_list', 'cart', 'article', 'product', 'topic_view', 'order', 'topic_create', 'private_msg', 'reply'])
 
 if __name__ == '__main__':
     main()
