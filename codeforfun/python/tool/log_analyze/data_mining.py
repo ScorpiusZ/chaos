@@ -140,6 +140,7 @@ def parseHome(line):
     appId,device_id=getAppDeviceId(line)
     time=getTime(line)
     registe_date=getParamValue(line,'register_date')
+    appId=getParamValue(line,'api_key')
     return print_data_mined(time,'home',appId,device_id,[registe_date] if registe_date else [])
 
 def parseProductList(line):
