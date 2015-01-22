@@ -5,11 +5,18 @@ import hashlib
 
 article_key='AJ03lQmVmtomCfug'
 product_key='XRbLEgrUCLHh94qG'
+topic_key='36aAoQHCaJKETWHR'
 
 BS=16
 
 pad=lambda s: s + (BS - len(s) % BS) * chr(BS - len(s) % BS)
 unpad = lambda s : s[0:-ord(s[-1])]
+
+def encode_topic(topic_id):
+    return aes_encript(topic_id,topic_key).strip()
+
+def decode_topic(topic_id):
+    return aes_decript(topic_id.decode('hex'),topic_key).strip()
 
 def encode_product(product_id):
     return aes_encript(product_id,product_key).strip()
@@ -40,7 +47,8 @@ def main():
     #print decode_article(encode_article('1440'))
     #print encode_product('1234')
     #print decode_product(encode_product('1234'))
-    print decode_article('a630035c59ae23e156975ddbc5706a4a')
+    #print decode_article('a630035c59ae23e156975ddbc5706a4a')
+    print decode_topic(encode_topic('548223'))
 
 if __name__ == '__main__':
     main()
