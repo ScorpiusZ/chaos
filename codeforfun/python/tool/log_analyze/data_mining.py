@@ -143,6 +143,11 @@ def parseHome(line):
     appId=getParamValue(line,'api_key')
     return print_data_mined(time,'home',appId,device_id,[registe_date] if registe_date else [])
 
+def parseMember(line):
+    appId,device_id=getAppDeviceId(line)
+    time=getTime(line)
+    return print_data_mined(time,'member',appId,device_id,[])
+
 def parseProductList(line):
     appId,device_id=getAppDeviceId(line)
     time=getTime(line)
@@ -161,6 +166,7 @@ def parseCategories(type_list=None):
         'topic_create':'POST .*nodes/.*/topics',
         'private_msg':'POST .*private_messages',
         'reply':'POST .*topics/.*replies',
+        'member':'POST .*members\"',
         }
     category_list={
         'GET .*home?':parseHome,
@@ -173,6 +179,7 @@ def parseCategories(type_list=None):
         'POST .*nodes/.*/topics':parseTopicCreate,
         'POST .*private_messages':parsePrivateMsg,
         'POST .*topics/.*replies':parseReplies,
+        'POST .*members\"':parseMember,
         }
     if type_list:
         type_list_name=[v for k,v in category_map.items() if k in type_list]
@@ -215,7 +222,9 @@ def getData(datetime,type_list=None):
         readFromGzipFile(gzfile,parseData,datetime,type_list)
 
 def main():
-    getData('20150105',['home', 'product_list', 'cart', 'article', 'product', 'topic_view', 'order', 'topic_create', 'private_msg', 'reply'])
+    getData('20150105',['member'])
+    #getData('20150105',['home', 'product_list', 'cart', 'article', 'product',
+        #'topic_view', \ 'order', 'topic_create', 'private_msg', 'reply','member'])
 
 if __name__ == '__main__':
     main()
