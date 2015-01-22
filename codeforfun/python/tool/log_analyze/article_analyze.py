@@ -15,9 +15,11 @@ def article_statics(datetime,limit):
     order_product_counts=da.getOrderCounts(datetime)
     cart_product_counts=da.getCartCount(datetime)
     result=da.rowGroupCount(da.getDataFrame('article',datetime),'values')
-    for article_id in result[:limit].keys():
+    article_ids=result[:limit].keys()
+    article_unique_device_counts=da.getUniqueDevice(datetime,'article',article_ids)
+    for article_id in article_ids:
         product_ids=api_util.getProductIdInArticle(article_id)
-        unique_device_num=article_unique_device_num(datetime,article_id)
+        unique_device_num=article_unique_device_counts.get(article_id,0)
         if product_ids:
             for product_id in product_ids:
                 print show_format.format(id_util.decode_article(article_id),result[article_id],product_id,\
@@ -39,11 +41,10 @@ def init(datetime):
         dm.getData(datetime,init_list)
 
 def article_unique_device_num(datetime,article_id):
-    article_df=da.getDataFrame('article',datetime)
-    return len(article_df[article_df['values'] == article_id]['device_id'].dropna().unique())
+    return da.getUniqueDevice(datetime,'article',[article_id]).get(article_id,0)
 
 def main():
-    datetime='20150114'
+    datetime='20150105'
     import sys
     if len(sys.argv)>1:
         datetime=sys.argv[1]

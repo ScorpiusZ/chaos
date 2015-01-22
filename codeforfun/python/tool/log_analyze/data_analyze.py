@@ -74,6 +74,11 @@ def getOrderCounts(datetime):
 def getCartCount(datetime):
     return getOrderOrCartCount(datetime,'cart')
 
+def getUniqueDevice(datetime,api_type,item_ids):
+    item_df=getDataFrame(api_type,datetime)
+    item_df=item_df[item_df['values'].isin(item_ids)]
+    return item_df.groupby('values')['device_id'].unique().map(len)
+
 def day_or_night(date):
     time=datetime.datetime.strptime(date.strip(),'%Y-%m-%d %H:%M:%S.%f')
     return 'day' if 9<=time.hour<=19 else 'night'
