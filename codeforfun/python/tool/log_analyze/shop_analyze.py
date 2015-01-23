@@ -6,6 +6,8 @@ import db
 
 pr_format='{0:12},{1:12},{2:12},{3:12},{4:12},{5:12},{6:12},{7:12}'
 
+LIMIT=20
+
 def getShopStatics(datetime):
     print datetime
     result=da.getUniqueDevice(datetime,'home','app_id')
