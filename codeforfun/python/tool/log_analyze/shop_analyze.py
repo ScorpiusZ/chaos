@@ -23,7 +23,7 @@ def getShopStatics(datetime):
     carts=da.getApiCountByApp(datetime,'cart')
     print pr_format.format('app_id','active_user','new_user','article','product','product_list','cart','order')
     for key,value in sorted_dict.items()[:10]:
-        print pr_format.format(key,value,new_devices.get(key,0),\
+        print pr_format.format(app_names.get(key,''),value,new_devices.get(key,0),\
                 articles.get(key,0),products.get(key,0),\
                 products_lists.get(key,0), carts.get(key,0),\
                 orders.get(key,0))
