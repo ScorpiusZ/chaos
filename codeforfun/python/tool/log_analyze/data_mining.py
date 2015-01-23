@@ -8,6 +8,7 @@ import Config
 
 LOG_DIR=Config.getLogDir()
 CSV_DIR=Config.getCsvDir()
+all_api_list=['home','product','article','product_list','cart','order','topic_list','topic_view','topic_create','private_msg','reply','topic_like','topic_follow','device']
 
 #out_format='time {0:30} ,api {1:12} , AppId {2:10} ,Device_id {3:30} ,values {4}'
 out_format='{0},{1},{2},{3},{4}'
@@ -154,6 +155,29 @@ def parseProductList(line):
     tag_name=unquote(getParamValue(line,'tag'))
     return print_data_mined(time,'product_list',appId,device_id,[tag_name] if tag_name else [])
 
+def parseDevice(line):
+    appId,device_id=getAppDeviceId(line)
+    time=getTime(line)
+    return print_data_mined(time,'device',appId,device_id,[])
+
+def parserTopicLike(line):
+    appId,device_id=getAppDeviceId(line)
+    time=getTime(line)
+    topic_id=str(line).split('/')[-2]
+    return print_data_mined(time,'topic_like',appId,device_id,[topic_id])
+
+def parserTopicFollow(line):
+    appId,device_id=getAppDeviceId(line)
+    time=getTime(line)
+    topic_id=str(line).split('/')[-2]
+    return print_data_mined(time,'topic_follow',appId,device_id,[topic_id])
+
+def paserTopicList(line):
+    appId,device_id=getAppDeviceId(line)
+    time=getTime(line)
+    node_id=str(line).split('/')[-2] if 'nodes/' in line else ''
+    return print_data_mined(time,'topic_list',appId,device_id,[node_id])
+
 def parseCategories(type_list=None):
     category_map={
         'home':'GET .*home?',
@@ -167,6 +191,10 @@ def parseCategories(type_list=None):
         'private_msg':'POST .*private_messages',
         'reply':'POST .*topics/.*replies',
         'member':'POST .*members\"',
+        'device':'POST \"/v2/devices\"',
+        'topic_like':'PUT.*topic.*like',
+        'topic_follow':'PUT.*topic.*follow',
+        'topic_list':'GET.*topics?',
         }
     category_list={
         'GET .*home?':parseHome,
@@ -180,6 +208,10 @@ def parseCategories(type_list=None):
         'POST .*private_messages':parsePrivateMsg,
         'POST .*topics/.*replies':parseReplies,
         'POST .*members\"':parseMember,
+        'POST \"/v2/devices\"':parseDevice,
+        'PUT.*topic.*like':parserTopicLike,
+        'PUT.*topic.*follow':parserTopicFollow,
+        'GET.*topics?':paserTopicList,
         }
     if type_list:
         type_list_name=[v for k,v in category_map.items() if k in type_list]
@@ -222,9 +254,12 @@ def getData(datetime,type_list=None):
         readFromGzipFile(gzfile,parseData,datetime,type_list)
 
 def main():
-    getData('20150105',['member'])
-    #getData('20150105',['home', 'product_list', 'cart', 'article', 'product',
-        #'topic_view', \ 'order', 'topic_create', 'private_msg', 'reply','member'])
+    import sys
+    if len(sys.argv)>1:
+        time=sys.argv[1]
+        getData(time,all_api_list)
+    else:
+        getData('20150106',all_api_list)
 
 if __name__ == '__main__':
     main()
