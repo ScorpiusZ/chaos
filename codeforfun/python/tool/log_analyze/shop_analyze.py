@@ -2,15 +2,15 @@
 #coding:utf8
 import data_analyze as da
 from collections import OrderedDict
+import db
 
 pr_format='{0:12},{1:12},{2:12},{3:12},{4:12},{5:12},{6:12},{7:12}'
 
 def getShopStatics(datetime):
     print datetime
-    all_df=da.getAllDataFrame(datetime)
-    grouped=all_df.groupby('app_id')
-    result=grouped['device_id'].unique().map(len)
+    result=da.getUniqueDevice(datetime,'home','app_id')
     result_dict=dict((key,result[key])for key in result.keys())
+    app_names=db.getAppNames(sorted_dict.keys()[:LIMIT])
     sorted_dict=OrderedDict(sorted(result_dict.items(),key=lambda item:item[1],reverse=True))
     device_df=da.getDataFrame('device',datetime)
     new_devices=da.getUniqueDevice(datetime,'device','app_id')
@@ -26,13 +26,13 @@ def getShopStatics(datetime):
                 products_lists.get(key,0), carts.get(key,0),\
                 orders.get(key,0))
     print
-    print pr_format.format(len(grouped),sum(sorted_dict.values()),sum(new_devices),\
+    print pr_format.format(len(sorted_dict),sum(sorted_dict.values()),sum(new_devices),\
             sum(articles),sum(products),sum(products_lists),\
             sum(carts),sum(orders))
 
 def main():
     import sys
-    datetime='20150105'
+    datetime='20150110'
     if len(sys.argv)>1:
         datetime=sys.argv[1]
         getShopStatics(datetime)
