@@ -8,6 +8,10 @@ import data_mining as dm
 
 volumn_names=['time','api_tag','app_id','device_id','values']
 
+def getAllDataFrame(datetime):
+    df_list=map(lambda x:getDataFrame(x,datetime),dm.all_api_list)
+    return pd.concat(df_list)
+
 def getDataFrame(api_type,datetime):
     import os
     csvfile=dm.getCsvFile(datetime,api_type)
@@ -74,10 +78,17 @@ def getOrderCounts(datetime):
 def getCartCount(datetime):
     return getOrderOrCartCount(datetime,'cart')
 
-def getUniqueDevice(datetime,api_type,item_ids):
+def getUniqueDevice(datetime,api_type,group_key):
     item_df=getDataFrame(api_type,datetime)
-    item_df=item_df[item_df['values'].isin(item_ids)]
-    return item_df.groupby('values')['device_id'].unique().map(len)
+    return item_df.groupby(group_key)['device_id'].unique().map(len)
+
+def groupByCount(df,group_name,count_volumn_name):
+    return df.groupby(group_name)[count_volumn_name].sum()
+
+def getApiCountByApp(datetime,api_type):
+    df=getDataFrame(api_type,datetime)
+    df['count']=1
+    return groupByCount(df,'app_id','count')
 
 def day_or_night(date):
     time=datetime.datetime.strptime(date.strip(),'%Y-%m-%d %H:%M:%S.%f')

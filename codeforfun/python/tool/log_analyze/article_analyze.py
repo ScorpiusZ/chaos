@@ -16,7 +16,7 @@ def article_statics(datetime,limit):
     cart_product_counts=da.getCartCount(datetime)
     result=da.rowGroupCount(da.getDataFrame('article',datetime),'values')
     article_ids=result[:limit].keys()
-    article_unique_device_counts=da.getUniqueDevice(datetime,'article',article_ids)
+    article_unique_device_counts=da.getUniqueDevice(datetime,'article','values')
     for article_id in article_ids:
         product_ids=api_util.getProductIdInArticle(article_id)
         unique_device_num=article_unique_device_counts.get(article_id,0)
@@ -41,7 +41,7 @@ def init(datetime):
         dm.getData(datetime,init_list)
 
 def article_unique_device_num(datetime,article_id):
-    return da.getUniqueDevice(datetime,'article',[article_id]).get(article_id,0)
+    return da.getUniqueDevice(datetime,'article','values').get(article_id,0)
 
 def main():
     datetime='20150105'

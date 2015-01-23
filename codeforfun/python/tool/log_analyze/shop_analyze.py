@@ -1,0 +1,43 @@
+#! /usr/bin/env python
+#coding:utf8
+import data_analyze as da
+from collections import OrderedDict
+
+pr_format='{0:12},{1:12},{2:12},{3:12},{4:12},{5:12},{6:12},{7:12}'
+
+def getShopStatics(datetime):
+    print datetime
+    all_df=da.getAllDataFrame(datetime)
+    grouped=all_df.groupby('app_id')
+    result=grouped['device_id'].unique().map(len)
+    result_dict=dict((key,result[key])for key in result.keys())
+    sorted_dict=OrderedDict(sorted(result_dict.items(),key=lambda item:item[1],reverse=True))
+    device_df=da.getDataFrame('device',datetime)
+    new_devices=da.getUniqueDevice(datetime,'device',sorted_dict.keys()[:10],'app_id')
+    articles=da.getApiCountByApp(datetime,'article')
+    products=da.getApiCountByApp(datetime,'product')
+    products_lists=da.getApiCountByApp(datetime,'product_list')
+    orders=da.getApiCountByApp(datetime,'order')
+    carts=da.getApiCountByApp(datetime,'cart')
+    print pr_format.format('app_id','active_user','new_user','article','product','product_list','cart','order')
+    for key,value in sorted_dict.items()[:10]:
+        print pr_format.format(key,value,new_devices.get(key,0),\
+                articles.get(key,0),products.get(key,0),\
+                products_lists.get(key,0), carts.get(key,0),\
+                orders.get(key,0))
+    print
+    print pr_format.format(len(grouped),sum(sorted_dict.values()),sum(new_devices),\
+            sum(articles),sum(products),sum(products_lists),\
+            sum(carts),sum(orders))
+
+def main():
+    import sys
+    datetime='20150105'
+    if len(sys.argv)>1:
+        datetime=sys.argv[1]
+        getShopStatics(datetime)
+    else:
+        getShopStatics(datetime)
+
+if __name__ == '__main__':
+    main()
