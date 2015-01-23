@@ -13,7 +13,7 @@ def getShopStatics(datetime):
     result_dict=dict((key,result[key])for key in result.keys())
     sorted_dict=OrderedDict(sorted(result_dict.items(),key=lambda item:item[1],reverse=True))
     device_df=da.getDataFrame('device',datetime)
-    new_devices=da.getUniqueDevice(datetime,'device',sorted_dict.keys()[:10],'app_id')
+    new_devices=da.getUniqueDevice(datetime,'device','app_id')
     articles=da.getApiCountByApp(datetime,'article')
     products=da.getApiCountByApp(datetime,'product')
     products_lists=da.getApiCountByApp(datetime,'product_list')
