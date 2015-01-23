@@ -2,7 +2,7 @@
 #coding:utf8
 import data_analyze as da
 from collections import OrderedDict
-import db
+import configs.db as db
 
 pr_format='{0:12},{1:12},{2:12},{3:12},{4:12},{5:12},{6:12},{7:12}'
 
@@ -22,7 +22,7 @@ def getShopStatics(datetime):
     orders=da.getApiCountByApp(datetime,'order')
     carts=da.getApiCountByApp(datetime,'cart')
     print pr_format.format('app_id','active_user','new_user','article','product','product_list','cart','order')
-    for key,value in sorted_dict.items()[:10]:
+    for key,value in sorted_dict.items()[:LIMIT]:
         print pr_format.format(app_names.get(key,''),value,new_devices.get(key,0),\
                 articles.get(key,0),products.get(key,0),\
                 products_lists.get(key,0), carts.get(key,0),\
