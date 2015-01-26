@@ -67,7 +67,7 @@ def main():
         article_statics(datetime,LIMIT)
     else:
         import datetime as dt
-        yestoday_date=dt.datetime.now()-dt.timedelta(1)
+        yestoday_date=dt.date.today()-dt.timedelta(days=1)
         yestoday=yestoday_date.strftime('%Y%m%d')
         init(yestoday)
         save_data(yestoday,10)
