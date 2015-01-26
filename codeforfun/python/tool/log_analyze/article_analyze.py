@@ -50,13 +50,10 @@ def save_data(datetime,limit):
               db.save_article_data(datetime,id_util.decode_article(article_id),result[article_id],0,0,0,0)
 
 def init(datetime):
+    csvfiles=map(lambda x:dm.getCsvFile(datetime,x),dm.all_api_list)
     import os
-    init_list=[]
-    for api_type in ['article','product','order','cart']:
-        if not os.path.exists(dm.getCsvFile(datetime,api_type)):
-            init_list.append(api_type)
-    if init_list:
-        dm.getData(datetime,init_list)
+    if not all(map(os.path.exists,csvfiles)):
+        dm.getData(datetime,dm.all_api_list)
 
 def article_unique_device_num(datetime,article_id):
     return da.getUniqueDevice(datetime,'article','values').get(article_id,0)
@@ -69,11 +66,12 @@ def main():
         init(datetime)
         article_statics(datetime,LIMIT)
     else:
-        import log_analyze as la
-        for date in la.getDates('2015,01,11','2015,01,15'):
-            datetime=str(date).replace('-','')
-            init(datetime)
-            article_statics(datetime,LIMIT)
+        import datetime as dt
+        yestoday_date=dt.datetime.now()-dt.timedelta(1)
+        yestoday=yestoday_date.strftime('%Y%m%d')
+        init(yestoday)
+        save_data(yestoday,10)
+
 
 if __name__ == '__main__':
     main()
