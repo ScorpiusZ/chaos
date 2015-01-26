@@ -90,6 +90,16 @@ def getApiCountByApp(datetime,api_type):
     df['count']=1
     return groupByCount(df,'app_id','count')
 
+def getActiveUser(datetime):
+    device_df=getDataFrame('device',datetime)
+    condition=pd.notnull(device_df['device_id'])
+    return len(device_df[condition]['device_id'].unique())
+
+def getAllUser(datetime):
+    home_df=getDataFrame('home',datetime)
+    condition=pd.notnull(home_df['device_id'])
+    return len(home_df[condition]['device_id'].unique())
+
 def day_or_night(date):
     time=datetime.datetime.strptime(date.strip(),'%Y-%m-%d %H:%M:%S.%f')
     return 'day' if 9<=time.hour<=19 else 'night'
