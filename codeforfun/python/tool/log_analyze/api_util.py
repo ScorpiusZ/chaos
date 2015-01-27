@@ -36,6 +36,11 @@ def getProductIdInArticle(article_id):
     else:
         return ''
 
+def getHomeData(api_key,registe_date,version):
+    url='{0}/{1}?api_key={2}&register_date={3}&ver={4}'.\
+            format(API_ROOT,'home',api_key,registe_date,version)
+    response=doGetRequest(url)
+    return response.content if response else ''
 
 def main():
     print getProductIdInArticle('6c4a632c33598c34f8bc6104f06a75d8')

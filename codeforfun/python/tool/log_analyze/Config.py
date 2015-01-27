@@ -2,6 +2,9 @@
 #coding:utf8
 import os
 
+def getHomeDateDir():
+    return getConfigs().get('home_data_dir','')
+
 def getLogDir():
     return getConfigs().get('log_dir','')
 
