@@ -1,11 +1,18 @@
 #! /usr/bin/env python
 #coding:utf8
 import data_analyze as da
+import pandas as pd
 import api_util
+import id_util
 
-def getDataFileName(date,api_key,key):
+def getDataFileName(date,api_key,key=None):
     import Config
-    return '{0}/{1}_{2}{3}'.format(Config.getHomeDateDir(),date,api_key,key)
+    if key:
+        return '{0}/{1}_{2}{3}'.format(Config.getHomeDateDir(),date,api_key,key)
+    else:
+        import os
+        fileNames=filter(lambda x:str(x).startswith(date+'_'+api_key),[filename for filename in os.listdir(Config.getHomeDateDir())])
+        return map(lambda x:'{0}/{1}'.format(Config.getHomeDateDir(),x),fileNames)
 
 def md5(content):
     import hashlib
@@ -27,33 +34,78 @@ def getHomeData(date,api_key,registe_date='20140911',version='1.4.1'):
 def analyzeItem(item_name,item):
     return item.get('type','') ,item.get('id',''),item.get('title','')
 
+def product_result(product_id,product_name):
+    global products,cart_product_counts,order_product_counts
+    return 'product_id:{3},{0},{1},{2}'.format( products.get(product_id,0),\
+            cart_product_counts.get(product_id,0),\
+            order_product_counts.get(product_id,0),\
+            id_util.decode_product(product_id))
+
+def article_result(article_id,article_name):
+    global articles
+    product_ids=map(id_util.encode_product,api_util.getProductIdInArticle(article_id))
+    result=map(lambda x :product_result(x,''),product_ids)
+    return 'article_id:{2},{0}\n   {1}'.format(articles.get(article_id,0),\
+            '\n '.join(result),\
+            id_util.decode_article(article_id))
+
+def tags_result(tag_title):
+    global tags
+    return 'tag_name:{1}:{0}'.format(tags.get(tag_title,0),tag_title)
+
+def result(item_type,item_id,item_title):
+    item_type=str(item_type).lower()
+    if item_type == 'product':
+        return product_result(item_id,item_title)
+    elif item_type == 'article':
+        return article_result(item_id,item_title)
+    elif item_type == 'tag':
+        return tags_result(item_title)
+
 def analyzeItemList(date,item_name,item_list):
     if not item_name == 'sections':
         print
-        print item_name
         print
+        print item_name
         for item in map(lambda x : analyzeItem(item_name,x),item_list):
             item_type,item_id,item_title=item
-            print item_type,item_id,item_title
+            print result(item_type,item_id,item_title)
+            print
     else:
         for item in item_list:
             analyzeItemList(date,'sections'+'_'+item['name'],item['objects'])
 
-def analyzeHomeDATA(date,api_key='4def4d59'):
-    fileName = getDataFileName(date,api_key)
-    with open(fileName,'r') as home_data_file:
-        home_data=eval(home_data_file.read(),{'false': False, 'true': True, 'null': None})
-        for key in home_data.keys():
-            if isinstance(home_data[key],list):
-                analyzeItemList(date,key,home_data[key])
+def analyzeHomeData(date,api_key='4def4d59'):
+    init(date)
+    fileNames = getDataFileName(date,api_key)
+    if fileNames :
+        for fileName in fileNames:
+            with open(fileName,'r') as home_data_file:
+                home_data=eval(home_data_file.read(),{'false': False, 'true': True, 'null': None})
+                for key in home_data.keys():
+                    if isinstance(home_data[key],list):
+                        analyzeItemList(date,key,home_data[key])
+    else:
+        print 'no file match {0}_{1}'.format(date,api_key)
 
+def init(datetime):
+    global articles,products,order_product_counts,cart_product_counts,tags
+    product_df=da.getDataFrame('product',datetime)
+    article_df=da.getDataFrame('article',datetime)
+    tags_df=da.getDataFrame('product_list',datetime)
+    products=da.rowGroupCount(product_df[pd.notnull(product_df['device_id'])],'values')
+    articles=da.rowGroupCount(article_df[pd.notnull(article_df['device_id'])],'values')
+    tags=da.rowGroupCount(tags_df[pd.notnull(tags_df['device_id'])],'values')
+    order_product_counts=da.getOrderCounts(datetime)
+    cart_product_counts=da.getCartCount(datetime)
 
 def main():
     import datetime,sys
-    date=datetime.datetime.now().strftime('%Y%m%d')
+    date='20150105'
     if '-get' in sys.argv:
+        date=datetime.datetime.now().strftime('%Y%m%d')
         getHomeData(date,'4def4d59')
-    #analyzeHomeDATA(date)
+    analyzeHomeData(date)
     #getDataKey(date)
 
 if __name__ == '__main__':
