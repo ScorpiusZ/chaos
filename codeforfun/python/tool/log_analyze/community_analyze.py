@@ -35,19 +35,13 @@ def community_static(datetime):
                 follows.get(topic_id,0),replies.get(topic_id,0))
     return result
 
-def write_data_csv(datetime,data):
-    import Config
-    fileName='{0}/{1}_{2}.csv'.format(Config.getStaticDir(),datetime,'community')
-    if data:
-        with open(fileName,'w') as File:
-            File.write(data)
 
 def community_report(datetime):
     init(datetime)
     data=''
     data=data+community_summarize(datetime)
     data=data+community_static(datetime)
-    write_data_csv(datetime,data)
+    da.write2CsvFile(datetime,'community',data)
 
 def init(datetime):
     global list_df,like_df,follow_df,create_df,view_df,reply_df,privateMsg_df

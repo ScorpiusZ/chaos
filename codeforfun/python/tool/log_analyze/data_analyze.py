@@ -100,6 +100,14 @@ def getAllUser(datetime):
     condition=pd.notnull(home_df['device_id'])
     return len(home_df[condition]['device_id'].unique())
 
+def write2CsvFile(datetime,staticType,data):
+    if data:
+        import Config
+        file_name='{0}/{1}_{2}.csv'.format(Config.getStaticDir(),datetime,staticType)
+        with open(file_name,'w') as File:
+            File.write(data)
+
+
 def day_or_night(date):
     time=datetime.datetime.strptime(date.strip(),'%Y-%m-%d %H:%M:%S.%f')
     return 'day' if 9<=time.hour<=19 else 'night'

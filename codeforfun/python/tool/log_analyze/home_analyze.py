@@ -88,16 +88,9 @@ def analyzeHomeData(date,api_key='4def4d59'):
                 for key in home_data.keys():
                     if isinstance(home_data[key],list):
                         data+=analyzeItemList(date,key,home_data[key])
-                write_data_csv(fileName,data)
+                da.write2CsvFile(date,str(fileName).split('_')[-1]+'_home',data)
     else:
         print 'no file match {0}_{1}'.format(date,api_key)
-
-def write_data_csv(fileName,data):
-    import Config
-    data_file_name='{0}/{1}_{2}.csv'.format(Config.getStaticDir(),str(fileName).split('/')[-1],'home')
-    if data:
-        with open(data_file_name,'w') as File:
-            File.write(data)
 
 def init(datetime):
     global articles,products,order_product_counts,cart_product_counts,tags
