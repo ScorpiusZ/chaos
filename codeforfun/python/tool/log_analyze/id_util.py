@@ -46,8 +46,11 @@ def aes_encript(content,key):
 def aes_decript(content,key):
     iv='1e5673b2572af26a8364a50af84c7d2a'.decode('hex')
     cipher=AES.new(hashlib.sha256(key).digest(),AES.MODE_CBC,iv)
-    return cipher.decrypt(content)
+    return filter_control_charater(cipher.decrypt(content))
 
+def filter_control_charater(content):
+    import string
+    return filter(lambda x:x in string.printable,content)
 
 def main():
     #print encode_article('1440')

@@ -8,8 +8,9 @@ pr_format='{0},{1},{2},{3},{4}\n'
 sum_pr_format='{0},{1},{2},{3}\n'
 
 def community_summarize(datetime):
-    global list_df,create_df
+    global list_df,create_df,privateMsg_df
     result=''
+    result+='private_message,'+str(len(privateMsg_df))+'\n\n'
     lists=da.rowGroupCount(list_df,'values')
     creates=da.rowGroupCount(create_df,'values')
     users=da.getUniqueDevice(datetime,'topic_list','values')
