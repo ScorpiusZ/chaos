@@ -6,11 +6,18 @@ import hashlib
 article_key='AJ03lQmVmtomCfug'
 product_key='XRbLEgrUCLHh94qG'
 topic_key='36aAoQHCaJKETWHR'
+node_key='bb2CJaHsHjEZhd2T'
 
 BS=16
 
 pad=lambda s: s + (BS - len(s) % BS) * chr(BS - len(s) % BS)
 unpad = lambda s : s[0:-ord(s[-1])]
+
+def encode_node(node_id):
+    return aes_encript(node_id,node_key).strip()
+
+def decode_node(node_id):
+    return aes_decript(node_id.decode('hex'),node_key).strip()
 
 def encode_topic(topic_id):
     return aes_encript(topic_id,topic_key).strip()

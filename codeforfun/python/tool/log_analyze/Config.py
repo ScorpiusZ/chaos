@@ -2,6 +2,9 @@
 #coding:utf8
 import os
 
+def getStaticDir():
+    return getConfigs().get('static_dir','')
+
 def getHomeDateDir():
     return getConfigs().get('home_data_dir','')
 
