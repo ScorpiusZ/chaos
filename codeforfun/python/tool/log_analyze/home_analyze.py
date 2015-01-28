@@ -36,7 +36,7 @@ def analyzeItem(item_name,item):
 
 def product_result(product_id,product_name):
     global products,cart_product_counts,order_product_counts
-    return 'product_id:{3},{0},{1},{2}'.format( products.get(product_id,0),\
+    return 'product_id:{3},{0},{1},{2}\n'.format( products.get(product_id,0),\
             cart_product_counts.get(product_id,0),\
             order_product_counts.get(product_id,0),\
             id_util.decode_product(product_id))
@@ -45,13 +45,13 @@ def article_result(article_id,article_name):
     global articles
     product_ids=map(id_util.encode_product,api_util.getProductIdInArticle(article_id))
     result=map(lambda x :product_result(x,''),product_ids)
-    return 'article_id:{2},{0}\n   {1}'.format(articles.get(article_id,0),\
+    return 'article_id:{2},{0}\n   {1}\n'.format(articles.get(article_id,0),\
             '\n '.join(result),\
             id_util.decode_article(article_id))
 
 def tags_result(tag_title):
     global tags
-    return 'tag_name:{1},{0}'.format(tags.get(tag_title,0),tag_title)
+    return 'tag_name:{1},{0}\n'.format(tags.get(tag_title,0),tag_title)
 
 def result(item_type,item_id,item_title):
     item_type=str(item_type).lower()
@@ -63,30 +63,41 @@ def result(item_type,item_id,item_title):
         return tags_result(item_title)
 
 def analyzeItemList(date,item_name,item_list):
+    data=''
     if not item_name == 'sections':
-        print
-        print
-        print item_name
+        data+=item_name
+        data+='\n'
         for item in map(lambda x : analyzeItem(item_name,x),item_list):
             item_type,item_id,item_title=item
-            print result(item_type,item_id,item_title)
-            print
+            data+=result(item_type,item_id,item_title)
+            data+='\n'
     else:
         for item in item_list:
-            analyzeItemList(date,'sections'+'_'+item['name'],item['objects'])
+            data+=analyzeItemList(date,'sections'+'_'+item['name'],item['objects'])
+    return data
+
 
 def analyzeHomeData(date,api_key='4def4d59'):
     init(date)
     fileNames = getDataFileName(date,api_key)
     if fileNames :
         for fileName in fileNames:
+            data=''
             with open(fileName,'r') as home_data_file:
                 home_data=eval(home_data_file.read(),{'false': False, 'true': True, 'null': None})
                 for key in home_data.keys():
                     if isinstance(home_data[key],list):
-                        analyzeItemList(date,key,home_data[key])
+                        data+=analyzeItemList(date,key,home_data[key])
+                write_data_csv(fileName,data)
     else:
         print 'no file match {0}_{1}'.format(date,api_key)
+
+def write_data_csv(fileName,data):
+    import Config
+    data_file_name='{0}/{1}_{2}.csv'.format(Config.getStaticDir(),str(fileName).split('/')[-1],'home')
+    if data:
+        with open(data_file_name,'w') as File:
+            File.write(data)
 
 def init(datetime):
     global articles,products,order_product_counts,cart_product_counts,tags
@@ -105,7 +116,7 @@ def main():
     if '-get' in sys.argv:
         date=datetime.datetime.now().strftime('%Y%m%d')
         getHomeData(date,'4def4d59')
-    else:
+    elif len(sys.argv)>1:
         date=sys.argv[1]
     analyzeHomeData(date)
     #getDataKey(date)
