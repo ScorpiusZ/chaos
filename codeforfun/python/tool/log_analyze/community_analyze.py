@@ -34,6 +34,8 @@ def community_static(datetime):
     for topic_id in views.keys()[:50]:
         result=result+pr_format.format(id_util.decode_topic(topic_id),views.get(topic_id,0),likes.get(topic_id,0),\
                 follows.get(topic_id,0),replies.get(topic_id,0))
+    result+='sum\n'
+    result+=pr_format.format(len(views.keys()),sum(views),sum(likes),sum(follows),sum(replies))
     return result
 
 
