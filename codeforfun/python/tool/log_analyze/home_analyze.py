@@ -32,7 +32,7 @@ def getHomeData(date,api_key,registe_date='20140911',version='1.4.1'):
     saveHomeData(date,api_key,content)
 
 def analyzeItem(item_name,item):
-    return item.get('type','') ,item.get('id',''),item.get('title','')
+    return item.get('type','') ,item.get('id',''),item.get('name','') if item.get('name','') else item.get('title','')
 
 def product_result(product_id,product_name):
     global products,cart_product_counts,order_product_counts
@@ -51,7 +51,7 @@ def article_result(article_id,article_name):
 
 def tags_result(tag_title):
     global tags
-    return 'tag_name:{1}:{0}'.format(tags.get(tag_title,0),tag_title)
+    return 'tag_name:{1},{0}'.format(tags.get(tag_title,0),tag_title)
 
 def result(item_type,item_id,item_title):
     item_type=str(item_type).lower()
@@ -105,6 +105,8 @@ def main():
     if '-get' in sys.argv:
         date=datetime.datetime.now().strftime('%Y%m%d')
         getHomeData(date,'4def4d59')
+    else:
+        date=sys.argv[1]
     analyzeHomeData(date)
     #getDataKey(date)
 
