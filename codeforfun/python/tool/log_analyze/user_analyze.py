@@ -3,7 +3,7 @@
 import data_analyze as da
 import pandas as pd
 import datetime
-import configs.db as db
+#import configs.db as db
 
 def getOrderedDeviceIds(datetime):
     order_df=da.getDataFrame('order',datetime)
@@ -68,7 +68,7 @@ def device_analyze(date,device_ids,days):
         devices,actions=deviceActions(datestr,device_ids)
         print '{0},{1},{2}'.format(datestr,len(devices),actions)
 
-def report(date):
+def order_report(date):
     days=6
     print date
     print '生成购物车'
@@ -88,13 +88,43 @@ def report(date):
     print '非本人下单'
     device_analyze(date,getNotOneSelfDevicesIds(date),days)
 
+def getCommunityDfs(date,device_ids):
+    c_list=['topic_list','topic_view','topic_create','private_msg','reply','topic_like','topic_follow']
+    all_dfs=map(lambda x:da.getDataFrame(x,date),c_list)
+    targetDevices_dfs=map(lambda x:targetDevicesDf(x,device_ids),all_dfs)
+    return pd.concat(targetDevices_dfs)
+
+def community_action(date,device_ids):
+    community_dfs=getCommunityDfs(date,device_ids)
+    result=community_dfs['api_tag'].value_counts()
+    actions=' '.join(map(lambda x:'{0}:{1}'.format(x,result.get(x,'')),result.keys()))
+    devices=community_dfs['device_id'].unique()
+    return devices,actions
+
+def community_analyze(date,device_ids,days):
+    today=datetime.datetime.strptime(date,'%Y%m%d')
+    for date in [today+datetime.timedelta(days=x) for x in xrange(days+1)]:
+        datestr=str(date).split(' ')[0].replace('-','')
+        devices,actions=community_action(datestr,device_ids)
+        print '{0},{1},{2}'.format(datestr,len(devices),actions)
+
+def getNewUser(date):
+    device_df=da.getDataFrame('device',date)
+    return device_df['device_id'].unique()
+
+def community_report(date):
+    days=1
+    new_devices=getNewUser(date)
+    print '{1} New User:{0}'.format(len(new_devices),date)
+    community_analyze(date,new_devices,days)
 
 def main():
-    date='20150105'
+    date='20150106'
     import sys
     if len(sys.argv)>1:
         date=sys.argv[1]
-    report(date)
+    #order_report(date)
+    community_report(date)
     #datetime='20150105'
     #ar_df=getDataFrame('article',datetime)
     #pr_df=getDataFrame('product',datetime)
