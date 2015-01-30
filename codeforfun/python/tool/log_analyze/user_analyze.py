@@ -3,6 +3,7 @@
 import data_analyze as da
 import pandas as pd
 import datetime
+import config.db as db
 
 def getOrderedDeviceIds(datetime):
     order_df=da.getDataFrame('order',datetime)
@@ -14,6 +15,38 @@ def getCartedDeviceIds(datetime):
 
 def targetDevicesDf(df,device_ids):
     return df[df['device_id'].isin(device_ids)]
+
+def getOnExpressDevicesIds(datetime):
+    states=['客户拒签，原件返回','客户签收，订单完成','已发货，准备收货']
+    return getDeviceIdsByState(datetime,states)
+
+def getRejectDevicesIds(datetime):
+    states=['客户拒签，原件返回','']
+    return getDeviceIdsByState(datetime,states)
+
+def getSignedDevicesIds(datetime):
+    states=['客户签收，订单完成']
+    return getDeviceIdsByState(datetime,states)
+
+def getAbandonDevicesIds(datetime):
+    states=['客户放弃，订单取消']
+    return getDeviceIdsByState(datetime,states)
+
+def getProgressedDevicesIds(datetime):
+    states=['正在处理']
+    return getDeviceIdsByState(datetime,states)
+
+def getCantContactDevicesIds(datetime):
+    states=['无法联系客户，订单取消']
+    return getDeviceIdsByState(datetime,states)
+
+def getNotOneSelfDevicesIds(datetime):
+    states=['非本人下单，已取消','非本人下单，订单取消']
+    return getDeviceIdsByState(datetime,states)
+
+def getDeviceIdsByState(date,states):
+    date=datetime.datetime.strptime(date,'%Y%m%d')
+    return db.getOrderDeviceIds(date,states)
 
 def getTargetDevicesDfs(datetime,device_ids):
     import data_mining as dm
@@ -36,11 +69,25 @@ def device_analyze(date,device_ids,days):
         print datestr,len(devices),actions
 
 def report(date):
+    days=6
     print date
-    print 'ordered_user'
-    device_analyze(date,getOrderedDeviceIds(date),1)
-    print 'cart_user'
-    device_analyze(date,getCartedDeviceIds(date),1)
+    print '生成购物车'
+    device_analyze(date,getOrderedDeviceIds(date),days)
+    print '下单用户'
+    device_analyze(date,getCartedDeviceIds(date),days)
+    print '已经发货用户'
+    device_analyze(date,getOnExpressDevicesIds(date),days)
+    print '客户拒签'
+    device_analyze(date,getRejectDevicesIds(date),days)
+    print '客户签收'
+    device_analyze(date,getSignedDevicesIds(date),days)
+    print '正在处理  订单'
+    device_analyze(date,getProgressedDevicesIds(date),days)
+    print ' 无法联系订单'
+    device_analyze(date,getCantContactDevicesIds(date),days)
+    print '非本人下单'
+    device_analyze(date,getNotOneSelfDevicesIds(date),days)
+
 
 def main():
     date='20150105'
