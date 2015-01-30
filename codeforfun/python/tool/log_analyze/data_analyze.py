@@ -17,7 +17,8 @@ def getDataFrame(api_type,datetime):
     csvfile=dm.getCsvFile(datetime,api_type)
     if not os.path.exists(csvfile):
         dm.getData(datetime,[api_type])
-    return pd.read_csv(csvfile,names=volumn_names)
+    df=pd.read_csv(csvfile,names=volumn_names)
+    return df[pd.notnull(df['device_id']) & pd.notnull(df['app_id'])]
 
 def getItemCount(item_id,datetime,item_tag):
     result=rowGroupCount(getDataFrame(item_tag,datetime),'values')
