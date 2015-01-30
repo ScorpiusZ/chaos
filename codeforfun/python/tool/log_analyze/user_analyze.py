@@ -3,7 +3,7 @@
 import data_analyze as da
 import pandas as pd
 import datetime
-#import configs.db as db
+import configs.db as db
 
 def getOrderedDeviceIds(datetime):
     order_df=da.getDataFrame('order',datetime)
