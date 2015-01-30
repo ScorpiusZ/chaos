@@ -3,7 +3,7 @@
 import data_analyze as da
 import pandas as pd
 import datetime
-import config.db as db
+import configs.db as db
 
 def getOrderedDeviceIds(datetime):
     order_df=da.getDataFrame('order',datetime)
@@ -66,15 +66,15 @@ def device_analyze(date,device_ids,days):
     for date in [today+datetime.timedelta(days=x) for x in xrange(days+1)]:
         datestr=str(date).split(' ')[0].replace('-','')
         devices,actions=deviceActions(datestr,device_ids)
-        print datestr,len(devices),actions
+        print '{0},{1},{2}'.format(datestr,len(devices),actions)
 
 def report(date):
     days=6
     print date
     print '生成购物车'
-    device_analyze(date,getOrderedDeviceIds(date),days)
-    print '下单用户'
     device_analyze(date,getCartedDeviceIds(date),days)
+    print '下单用户'
+    device_analyze(date,getOrderedDeviceIds(date),days)
     print '已经发货用户'
     device_analyze(date,getOnExpressDevicesIds(date),days)
     print '客户拒签'
