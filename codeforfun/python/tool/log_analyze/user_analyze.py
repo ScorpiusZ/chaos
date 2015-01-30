@@ -44,6 +44,9 @@ def report(date):
 
 def main():
     date='20150105'
+    import sys
+    if len(sys.argv)>1:
+        date=sys.argv[1]
     report(date)
     #datetime='20150105'
     #ar_df=getDataFrame('article',datetime)
