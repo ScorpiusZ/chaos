@@ -50,7 +50,7 @@ def getDeviceIdsByState(date,states):
 
 def getTargetDevicesDfs(datetime,device_ids):
     import data_mining as dm
-    all_dfs=map(lambda x:da.getDataFrame(x,datetime),dm.all_api_list)
+    all_dfs=da.getOneDayUnionDf(datetime,dm.all_api_list)
     targetDevices_dfs=map(lambda x:targetDevicesDf(x,device_ids),all_dfs)
     return pd.concat(targetDevices_dfs)
 
@@ -90,7 +90,7 @@ def order_report(date):
 
 def getCommunityDfs(date,device_ids):
     c_list=['topic_list','topic_view','topic_create','private_msg','reply','topic_like','topic_follow']
-    all_dfs=map(lambda x:da.getDataFrame(x,date),c_list)
+    all_dfs=da.getOneDayUnionDf(date,c_list)
     targetDevices_dfs=map(lambda x:targetDevicesDf(x,device_ids),all_dfs)
     return pd.concat(targetDevices_dfs)
 
@@ -112,11 +112,18 @@ def getNewUser(date):
     device_df=da.getDataFrame('device',date)
     return device_df['device_id'].unique()
 
+def getActiveUserdevices(date):
+    c_list=['topic_list','topic_view','topic_create','private_msg','reply','topic_like','topic_follow']
+    return pd.concat(da.getOneDayUnionDf(date,c_list))['device_id'].unique()
+
 def community_report(date):
-    days=1
+    days=6
     new_devices=getNewUser(date)
     print '{1} New User:{0}'.format(len(new_devices),date)
     community_analyze(date,new_devices,days)
+    active_devices=getActiveUserdevices(date)
+    print '{1} Active User:{0}'.format(len(active_devices),date)
+    community_analyze(date,active_devices,days)
 
 def main():
     date='20150106'

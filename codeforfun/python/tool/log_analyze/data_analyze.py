@@ -8,10 +8,6 @@ import data_mining as dm
 
 volumn_names=['time','api_tag','app_id','device_id','values']
 
-def getAllDataFrame(datetime):
-    df_list=map(lambda x:getDataFrame(x,datetime),dm.all_api_list)
-    return pd.concat(df_list)
-
 def getDataFrame(api_type,datetime):
     import os
     csvfile=dm.getCsvFile(datetime,api_type)
@@ -20,47 +16,11 @@ def getDataFrame(api_type,datetime):
     df=pd.read_csv(csvfile,names=volumn_names)
     return df[pd.notnull(df['device_id']) & pd.notnull(df['app_id'])]
 
-def getItemCount(item_id,datetime,item_tag):
-    result=rowGroupCount(getDataFrame(item_tag,datetime),'values')
-    return result.get(item_id,0)
-
-def getProductViewCount(product_id,datetime):
-    return getItemCount(product_id,datetime,'product')
-
-def getArticleViewCount(article_id,datetime):
-    return getItemCount(article_id,datetime,'article')
-
 def rowGroupCount(dataFrame,rowName):
     return dataFrame[rowName].value_counts()
 
-def getUniqDevices(item_tag,datetime):
-    return len(getDataFrame(item_tag,datetime)['device_id'].unique())
-
-def getUniqDevicesViewProduct(datetime):
-    return getUniqDevices('product',datetime)
-
-def getUniqDevicesViewArticle(datetime):
-    return getUniqDevices('article',datetime)
-
-def getUniqDevicesCreateOrders(datetime):
-    return getUniqDevices('orders',datetime)
-
-def getUniqDevicesCreateCart(datetime):
-    return getUniqDevices('cart',datetime)
-
 def getProductCounts(products_list,product_id):
     return products_list.get(product_id,0)
-
-def showProductPV(datetime,limit):
-    print datetime
-    order_product_counts=getOrderCounts(datetime)
-    cart_product_counts=getCartCount(datetime)
-    result=rowGroupCount(getDataFrame('product',datetime),'values')
-    for product_id in result[:limit].keys():
-        print '{0:10},{1:10},{3:10},{2}'\
-                .format(idu.decode_product(product_id),result[product_id],\
-                getProductCounts(order_product_counts,product_id),\
-                getProductCounts(cart_product_counts,product_id))
 
 def getProductList(datetime,key_name):
     product_ids_list=[]
@@ -90,6 +50,22 @@ def getApiCountByApp(datetime,api_type):
     df=getDataFrame(api_type,datetime)
     df['count']=1
     return groupByCount(df,'app_id','count')
+
+def getOneDayUnionDf(date,type_list):
+    return map(lambda x:getDataFrame(x,date),type_list)
+
+def getUnionDf(date_from,date_to,type_list):
+    date_from,date_to=map(lambda x:datetime.datetime.strptime(x,'%Y%m%d'),[date_from,date_to])
+    interval=date_to-date_from
+    dates=[date_from+datetime.timedelta(days=x) for x in xrange(interval.days+1)]
+    dates=map(lambda x:str(x).split(' ')[0].replace('-',''),dates)
+    return map(lambda x:pd.concat(getOneDayUnionDf(x,type_list)),dates)
+
+def getNewUserDevices(datetime):
+    return getDataFrame('device',datetime)['device_id'].unique()
+
+def getActiveUserdevices(datetime):
+    return getUnionDf(datetime,datetime,dm.all_api_list)['device_id'].unique()
 
 def getActiveUser(datetime):
     device_df=getDataFrame('device',datetime)
@@ -121,13 +97,12 @@ def getTagStatic(datetime,limit):
 
 def test():
     datetime='20150105'
+    #getUnionDf(datetime,'20150106',dm.all_api_list)
+    #print getOneDayUnionDf(datetime,dm.all_api_list)
     #product_id='69ec4fcb3450ebd81be117f1bd2df0f4'
     #print order_df['new_time'].value_counts()
     #print getDataFrame('home',datetime)['values'].dropna().value_counts()
     #print order_df.sort('time',ascending=False).head(3)
-    #showProductPV(datetime,50)
-    print getUniqDevicesCreateCart(datetime)
-    #showProductPV('20150115',50)
     #print rowGroupCount(getDataFrame('product',datetime),'values')
     #print getProductViewCount(product_id,datetime)
 
