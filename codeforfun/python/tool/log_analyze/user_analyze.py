@@ -63,10 +63,14 @@ def deviceActions(date,device_ids):
 
 def device_analyze(date,device_ids,days):
     today=datetime.datetime.strptime(date,'%Y%m%d')
+    all_device=[]
     for date in [today+datetime.timedelta(days=x) for x in xrange(days+1)]:
         datestr=str(date).split(' ')[0].replace('-','')
         devices,actions=deviceActions(datestr,device_ids)
+        if date.day != today.day:
+            all_device=all_device+devices.tolist()
         print '{0},{1},{2}'.format(datestr,len(devices),actions)
+    print 'user remains,'+str(len(list(set(all_device))))
 
 def order_report(date):
     days=6
@@ -130,8 +134,8 @@ def main():
     import sys
     if len(sys.argv)>1:
         date=sys.argv[1]
-    #order_report(date)
-    community_report(date)
+    order_report(date)
+    #community_report(date)
     #datetime='20150105'
     #ar_df=getDataFrame('article',datetime)
     #pr_df=getDataFrame('product',datetime)
