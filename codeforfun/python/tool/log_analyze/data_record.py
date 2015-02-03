@@ -7,7 +7,7 @@ def product_record(date):
     import configs.db as db
     product_df=da.getDataFrame('product',str(date).replace('-',''))
     products=da.rowGroupCount(product_df,'values')
-    for product_id in products.keys()[:10]:
+    for product_id in products.keys():
         pv=products.get(product_id,0)
         product_id=idu.decode_product(product_id)
         if not db.update_product(product_id,pv,date):
