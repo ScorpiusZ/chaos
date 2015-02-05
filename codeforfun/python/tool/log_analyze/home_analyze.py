@@ -111,7 +111,7 @@ def main():
         getHomeData(date,'4def4d59')
     elif len(sys.argv)>1:
         date=sys.argv[1]
-    analyzeHomeData(date)
+        analyzeHomeData(date)
     #getDataKey(date)
 
 if __name__ == '__main__':

@@ -30,8 +30,13 @@ def every_report(date):
 
 def main():
     import log_analyze as la
-    for date in la.getDates('2015,1,24','2015,2,2'):
-        every_report(str(date).replace('-',''))
+    import sys
+    if len(sys.argv)>1:
+        date=sys.argv[1]
+        every_report(date)
+    else:
+        for date in la.getDates('2015,1,24','2015,2,2'):
+            every_report(str(date).replace('-',''))
 
 if __name__ == '__main__':
     main()
