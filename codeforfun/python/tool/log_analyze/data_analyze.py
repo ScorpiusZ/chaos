@@ -43,6 +43,9 @@ def getUniqueDevice(datetime,api_type,group_key):
     item_df=getDataFrame(api_type,datetime)
     return item_df.groupby(group_key)['device_id'].unique().map(len)
 
+def getDfUniqueDevice(item_df,group_key):
+    return item_df.groupby(group_key)['device_id'].unique().map(len)
+
 def groupByCount(df,group_name,count_volumn_name):
     return df.groupby(group_name)[count_volumn_name].sum()
 
