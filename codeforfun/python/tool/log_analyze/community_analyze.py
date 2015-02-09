@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 #coding:utf8
 import data_analyze as da
+import pandas as pd
 import id_util
 
 pr_format='{0},{1},{2},{3},{4}\n'
@@ -46,10 +47,18 @@ def community_report(datetime):
     data=data+community_static(datetime)
     da.write2CsvFile(datetime,'community',data)
 
+def community_record(date):
+    import configs.db as db
+    init(date)
+    global list_df,like_df,follow_df,create_df,view_df,reply_df,privateMsg_df,device_df
+    active_user=len(pd.concat([list_df,like_df,follow_df,create_df,view_df,reply_df,privateMsg_df])['device_id'].unique())
+    db.update_community_static(date,len(view_df),len(create_df),len(like_df),len(reply_df),len(privateMsg_df),len(follow_df),active_user,len(device_df['device_id'].unique()))
+
+
 def init(datetime):
-    global list_df,like_df,follow_df,create_df,view_df,reply_df,privateMsg_df
-    list_df,view_df,create_df,privateMsg_df,reply_df,like_df,follow_df=map(lambda x:da.getDataFrame(x,datetime),\
-            ['topic_list','topic_view','topic_create','private_msg','reply','topic_like','topic_follow'])
+    global list_df,like_df,follow_df,create_df,view_df,reply_df,privateMsg_df,device_df
+    list_df,view_df,create_df,privateMsg_df,reply_df,like_df,follow_df,device_df=map(lambda x:da.getDataFrame(x,datetime),\
+            ['topic_list','topic_view','topic_create','private_msg','reply','topic_like','topic_follow','device'])
 
 def main():
     import sys

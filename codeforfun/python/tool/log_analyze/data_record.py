@@ -107,12 +107,17 @@ def home_record(date,api_key='4def4d59'):
     else:
         print 'no file match {0}_{1}'.format(date,api_key)
 
+def community_record(date):
+    import community_analyze as ca
+    ca.community_record(date)
+
 
 def data_record(date):
     strdate=str(date).replace('-','')
     init(strdate)
     product_record(date)
     home_record(strdate)
+    community_record(strdate)
 
 def main():
     import datetime,sys
