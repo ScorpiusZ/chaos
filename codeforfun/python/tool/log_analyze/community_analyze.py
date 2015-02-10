@@ -50,15 +50,16 @@ def community_report(datetime):
 def community_record(date):
     import configs.db as db
     init(date)
-    global list_df,like_df,follow_df,create_df,view_df,reply_df,privateMsg_df,device_df
+    global list_df,like_df,follow_df,create_df,view_df,reply_df,privateMsg_df
     active_user=len(pd.concat([list_df,like_df,follow_df,create_df,view_df,reply_df,privateMsg_df])['device_id'].unique())
-    db.update_community_static(date,len(view_df),len(create_df),len(like_df),len(reply_df),len(privateMsg_df),len(follow_df),active_user,len(device_df['device_id'].unique()))
+    registe_user=db.getRegisteUser(date)
+    db.update_community_static(date,len(view_df),len(create_df),len(like_df),len(reply_df),len(privateMsg_df),len(follow_df),active_user,registe_user)
 
 
 def init(datetime):
-    global list_df,like_df,follow_df,create_df,view_df,reply_df,privateMsg_df,device_df
-    list_df,view_df,create_df,privateMsg_df,reply_df,like_df,follow_df,device_df=map(lambda x:da.getDataFrame(x,datetime),\
-            ['topic_list','topic_view','topic_create','private_msg','reply','topic_like','topic_follow','device'])
+    global list_df,like_df,follow_df,create_df,view_df,reply_df,privateMsg_df
+    list_df,view_df,create_df,privateMsg_df,reply_df,like_df,follow_df=map(lambda x:da.getDataFrame(x,datetime),\
+            ['topic_list','topic_view','topic_create','private_msg','reply','topic_like','topic_follow'])
 
 def main():
     import sys
