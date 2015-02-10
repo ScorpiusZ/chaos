@@ -181,7 +181,7 @@ def paserTopicList(line):
 def parseCategories(type_list=None):
     category_map={
         'home':'GET .*home?',
-        'product_list':'GET .*products?',
+        'product_list':'GET .*products\?',
         'cart':'string: POST.*cart',
         'article':'GET .*articles/',
         'product':'GET .*products/',
@@ -198,7 +198,7 @@ def parseCategories(type_list=None):
         }
     category_list={
         'GET .*home?':parseHome,
-        'GET .*products?':parseProductList,
+        'GET .*products\?':parseProductList,
         'string: POST.*cart':parseCart,
         'GET .*articles/':parseArticle,
         'GET .*products/':parseProduct,
