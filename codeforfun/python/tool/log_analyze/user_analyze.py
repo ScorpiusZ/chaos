@@ -129,12 +129,33 @@ def community_report(date):
     print '{1} Active User:{0}'.format(len(active_devices),date)
     community_analyze(date,active_devices,days)
 
+
+def combine(x):
+    x_list=str(x).split(',')
+    return ','.join(list(set(x_list)))
+
+def product_report(date):
+    #api_list=['product_list','home','product','article','cart','order','device']
+    api_list=['home','product','article','product_list','cart','order','topic_list','topic_view','topic_create','private_msg','reply','topic_like','topic_follow','device']
+    al_df=pd.concat(da.getOneDayUnionDf(date,api_list))
+    al_df=al_df.sort('time',ascending=True)
+    al_df['action']=al_df['time']+al_df['api_tag']+':'+al_df['values'].map(str)
+    al_df['uuid']=al_df['app_id']+'_'+al_df['device_id']
+    grouped=al_df.groupby('uuid')
+    actions=grouped['action'].agg(' , '.join)
+    result=grouped['api_tag'].agg(','.join).map(combine).value_counts()
+    total=sum(result)
+    for key in result.keys()[:20]:
+        print key
+        print result.get(key,'')/float(total)
+
 def main():
-    date='20150106'
+    date='20150204'
     import sys
     if len(sys.argv)>1:
         date=sys.argv[1]
-    order_report(date)
+    #order_report(date)
+    product_report(date)
     #community_report(date)
     #datetime='20150105'
     #ar_df=getDataFrame('article',datetime)
