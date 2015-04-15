@@ -134,20 +134,53 @@ def combine(x):
     x_list=str(x).split(',')
     return ','.join(list(set(x_list)))
 
+def getViewProductType(uuid,actions):
+    if not uuid or not actions :
+        return
+    action_list=actions.split(' , ')
+    api_key,device_id=uuid.split(' ')
+    from_type=''
+    result=[]
+    for action in action_list:
+        try:
+            time,api_type,value=action.split('&')
+            if api_type == 'home' :
+                from_type='home'
+            elif api_type == 'product_list':
+                from_type=value
+            elif api_type == 'product':
+               result.append((api_key,device_id,time,api_type,value,from_type))
+        except:
+            continue
+    return result
+
 def product_report(date):
-    #api_list=['product_list','home','product','article','cart','order','device']
-    api_list=['home','product','article','product_list','cart','order','topic_list','topic_view','topic_create','private_msg','reply','topic_like','topic_follow','device']
+    api_list=['product_list','home','product']
+    #api_list=['home','product','article','product_list','cart','order','topic_list','topic_view','topic_create','private_msg','reply','topic_like','topic_follow','device']
     al_df=pd.concat(da.getOneDayUnionDf(date,api_list))
     al_df=al_df.sort('time',ascending=True)
-    al_df['action']=al_df['time']+al_df['api_tag']+':'+al_df['values'].map(str)
-    al_df['uuid']=al_df['app_id']+'_'+al_df['device_id']
+    al_df['action']=al_df['time']+'&'+al_df['api_tag']+'&'+al_df['values'].map(str)
+    al_df['uuid']=al_df['app_id']+' '+al_df['device_id']
     grouped=al_df.groupby('uuid')
     actions=grouped['action'].agg(' , '.join)
     result=grouped['api_tag'].agg(','.join).map(combine).value_counts()
     total=sum(result)
-    for key in result.keys()[:20]:
-        print key
-        print result.get(key,'')/float(total)
+    typed_product_list=[]
+    for key in actions.keys():
+        typed_product_list+=getViewProductType(key,actions.get(key,''))
+    result_df=pd.DataFrame(typed_product_list,columns=['api_key','device_id','time','api_type','value','from_type'])
+    result_df['count']=1
+    typed_product_list=result_df.groupby(['value','from_type'])['count'].sum()
+    print type(typed_product_list)
+    total=0
+    for key in typed_product_list.keys():
+        product_id,from_type=key
+        num=typed_product_list.get(key,0)
+        total+=num
+        print product_id,from_type,num
+    #for api_key,device_id,time,api_type,value,from_type in typed_product_list:
+        #print api_key,device_id,time,api_type,value,from_type
+
 
 def main():
     date='20150204'
@@ -155,6 +188,7 @@ def main():
     if len(sys.argv)>1:
         date=sys.argv[1]
     #order_report(date)
+    #print len(da.getDataFrame('product',date))
     product_report(date)
     #community_report(date)
     #datetime='20150105'
