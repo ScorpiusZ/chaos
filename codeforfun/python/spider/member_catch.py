@@ -307,8 +307,13 @@ def getAlbumsId(name,member_id):
         cursor.close()
         return albums_id
 
+def enlager_photo(url):
+    url_arr=url.split('/')
+    url_arr[8]=url_arr[9]='999'
+    return '/'.join(url_arr)
+
 def update_photos(member,member_id):
-    photos=member['photos']
+    photos=map(enlager_photo,member['photos'])
     cursor=db.cursor()
     albums_id=getAlbumsId('photo_list',member_id)
     if not albums_id :
