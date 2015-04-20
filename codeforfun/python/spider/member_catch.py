@@ -309,7 +309,8 @@ def getAlbumsId(name,member_id):
 
 def enlager_photo(url):
     url_arr=url.split('/')
-    url_arr[8]=url_arr[9]='999'
+    url_arr[8]='630'
+    url_arr[9]='770'
     return '/'.join(url_arr)
 
 def update_photos(member,member_id):
