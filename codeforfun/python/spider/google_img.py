@@ -46,7 +46,7 @@ def search4Result(url,count):
 def download_file(url):
     local_filename = url.split('/')[-1]
     # NOTE the stream=True parameter
-    local_filename='/Users/ScorpiusZ/Temp/imgs/'+str(int(round(time.time()*1000)))+'_'+local_filename
+    local_filename=img_dir()+'/'+str(int(round(time.time()*1000)))+'_'+local_filename
     r = requests.get(url, stream=True)
     with open(local_filename, 'wb') as f:
         for chunk in r.iter_content(chunk_size=1024):
@@ -55,11 +55,19 @@ def download_file(url):
                 f.flush()
     return local_filename
 
+def img_dir():
+    import os
+    cur_dir=os.path.dirname(os.path.abspath(__file__))
+    imgs_dir=cur_dir+os.path.sep+'imgs'
+    if not os.path.exists(imgs_dir):
+        os.mkdir(imgs_dir)
+    return imgs_dir
+
 def main():
     find(['美女交友','banner'])
-    find(['美女诱惑','banner'])
-    find(['美女游戏','banner'])
-    find(['交友诱惑','banner'])
+    #find(['美女诱惑','banner'])
+    #find(['美女游戏','banner'])
+    #find(['交友诱惑','banner'])
 
 if __name__ == '__main__':
     main()
