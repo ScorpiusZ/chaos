@@ -44,9 +44,13 @@ def search4Result(url,count):
             continue
 
 def download_file(url):
+    import os
     local_filename = url.split('/')[-1]
     # NOTE the stream=True parameter
-    local_filename=img_dir()+'/'+str(int(round(time.time()*1000)))+'_'+local_filename
+    local_filename=img_dir()+'/'+md5(url)+'_'+local_filename
+    if os.path.exists(local_filename):
+        print '{0} already exists!'.format(local_filename)
+        return local_filename
     r = requests.get(url, stream=True)
     with open(local_filename, 'wb') as f:
         for chunk in r.iter_content(chunk_size=1024):
@@ -54,6 +58,10 @@ def download_file(url):
                 f.write(chunk)
                 f.flush()
     return local_filename
+
+def md5(string):
+    import hashlib
+    return hashlib.md5(string).hexdigest()
 
 def img_dir():
     import os
