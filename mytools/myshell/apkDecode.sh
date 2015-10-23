@@ -7,7 +7,7 @@ apktool(){
     echo
     echo "doing apktool...."
     echo
-    ~/Documents/mytools/apktool/apktool d $apk $file
+    apktool d $apk $file
 }
 
 class2jar(){
