@@ -1,0 +1,9 @@
+#gnome-settings-daemon &     # using gnome
+#nm-applet --sm-disable &    # using network manager
+#gnome-power-manager&        #power manager
+#gnome-volume-manager&        #volume manager
+#update-notifier&            #auto update
+##eval 'gnome-keyring-deamon' #ssh/GPG agent
+#exec awesome
+#map capslock to ctrl
+setxkbmap -option 'ctrl:nocaps'

@@ -1,0 +1,24 @@
+
+"maps
+map J gT
+map K gt
+vnoremap <esc> <esc><esc>
+cnoremap jj <esc>
+
+"hintchar and theme
+set hintchars=sadfjklewcmpghov
+colorscheme mycolor
+
+"set complete = search engines and keyword urls / history / bookmarks
+set complete=bsh
+
+"ui setting
+set gui=noaddons,nobookmarks,nomenu,navigation,tabs
+
+"set next page
+set nextpattern=\s*下一页|下一张|下页\s*,\bnext\b,^>$,^(>>|»)$,^(>|»),(>|»)$,\bmore\b
+set previouspattern=\s*上一页|上一张|上页\s*,\bprev|previous\b,^<$,^(<<|«)$,^(<|«),(<|«)$ 
+
+"surround com and net可以直接先输入网站名,再用<CTRL>+<ENTER>快捷输入.com/.net
+cnoremap<S-Return> <End>.net<Home><C-Right><Right>www.<CR>
+cnoremap<C-Return> <End>.com<Home><C-Right><Right>www.<CR>
