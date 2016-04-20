@@ -57,14 +57,14 @@ export PATH="/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
-# export LANG=en_US.UTF-8
+export LANG=zh_CN.UTF-8
 
 # Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
+if [[ -n $SSH_CONNECTION ]]; then
+  export EDITOR='vim'
+else
+  export EDITOR='mvim'
+fi
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
@@ -110,8 +110,6 @@ setopt HIST_FIND_NO_DUPS
 
 #my alias
 alias la='ls -A'
-alias ps='ps aux'
-alias mp='mplayer' #mplayer
 alias sl=ls # often screw this up
 
 #see http://dougblack.io/words/zsh-vi-mode.html
@@ -130,3 +128,5 @@ bindkey '^w' backward-kill-word
 bindkey '^r' history-incremental-search-backward
 bindkey '^o' accept-line-and-down-history
 bindkey '^k' kill-line
+bindkey '^[OA' up-line-or-beginning-search
+
