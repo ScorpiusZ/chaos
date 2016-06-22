@@ -5,7 +5,7 @@ export ZSH=$HOME/.oh-my-zsh
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-ZSH_THEME="myzsh"
+ZSH_THEME="agnoster"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -45,13 +45,15 @@ ZSH_THEME="myzsh"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+plugins=(git autojump rails docker xcode)
 
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
-export PATH="/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"
+export ANDROID_HOME='/Users/ScorpiusZ/Documents/Android/sdk'
+export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/tools":$PATH
+export https_proxy=http://127.0.0.1:18222;export http_proxy=http://127.0.0.1:18222
 
 #
 # export MANPATH="/usr/local/man:$MANPATH"
@@ -60,11 +62,11 @@ export PATH="/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"
 export LANG=zh_CN.UTF-8
 
 # Preferred editor for local and remote sessions
-if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='vim'
-else
-  export EDITOR='mvim'
-fi
+# if [[ -n $SSH_CONNECTION ]]; then
+#   export EDITOR='vim'
+# else
+#   export EDITOR='mvim'
+# fi
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
@@ -81,6 +83,9 @@ fi
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+#autojump
+[[ -s `brew --prefix`/etc/autojump.sh ]] && . `brew --prefix`/etc/autojump.sh
+
 #history manage
 # Remember about a years worth of history (AWESOME)
 SAVEHIST=10000
@@ -88,7 +93,7 @@ HISTSIZE=10000
 # Don't overwrite, append!
 setopt APPEND_HISTORY
 # Write after each command
- setopt INC_APPEND_HISTORY
+setopt INC_APPEND_HISTORY
 # Killer: share history between multiple shells
 setopt SHARE_HISTORY
 # If I type cd and then cd again, only save the last one
@@ -109,8 +114,13 @@ setopt HIST_EXPIRE_DUPS_FIRST
 setopt HIST_FIND_NO_DUPS
 
 #my alias
+alias vi='vim'
 alias la='ls -A'
+alias m='mvim'
+alias o='open'
+alias n='nvim'
 alias sl=ls # often screw this up
+
 
 #see http://dougblack.io/words/zsh-vi-mode.html
 #vi mode
@@ -130,3 +140,7 @@ bindkey '^o' accept-line-and-down-history
 bindkey '^k' kill-line
 bindkey '^[OA' up-line-or-beginning-search
 
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
