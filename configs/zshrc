@@ -45,28 +45,41 @@ ZSH_THEME="agnoster"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git autojump rails docker xcode)
+plugins=(
+  git
+  osx
+  rake
+  ruby
+  rails
+  docker
+)
 
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
-export ANDROID_HOME='/Users/ScorpiusZ/Documents/Android/sdk'
-export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/tools":$PATH
-export https_proxy=http://127.0.0.1:18222;export http_proxy=http://127.0.0.1:18222
-
-#
-# export MANPATH="/usr/local/man:$MANPATH"
+# proxy
+proxy(){
+  case "$1" in
+    "on")
+      export http_proxy=http://127.0.0.1:1087;export https_proxy=http://127.0.0.1:1087;
+      ;;
+    "off")
+      unset http_proxy;unset https_proxy;
+      ;;
+  esac
+}
 
 # You may need to manually set your language environment
 export LANG=zh_CN.UTF-8
 
 # Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
+if [[ -n $SSH_CONNECTION ]]; then
+  export EDITOR='vim'
+else
+  export EDITOR='nvim'
+fi
+
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
@@ -80,8 +93,9 @@ export LANG=zh_CN.UTF-8
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
+alias vi='nvim'
+alias o='open'
+alias n='nvim'
 
 #autojump
 [[ -s `brew --prefix`/etc/autojump.sh ]] && . `brew --prefix`/etc/autojump.sh
@@ -113,13 +127,6 @@ setopt HIST_SAVE_NO_DUPS
 setopt HIST_EXPIRE_DUPS_FIRST
 setopt HIST_FIND_NO_DUPS
 
-#my alias
-alias vi='vim'
-alias la='ls -A'
-alias m='mvim'
-alias o='open'
-alias n='nvim'
-alias sl=ls # often screw this up
 
 
 #see http://dougblack.io/words/zsh-vi-mode.html
